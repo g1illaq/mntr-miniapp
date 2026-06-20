@@ -70,7 +70,7 @@ export default function Home() {
           </p>
         </div>
         <a
-          href="https://t.me/menotrcommunity"
+          href="https://t.me/mntrcomm"
           className="w-full py-3 rounded-xl text-sm font-semibold text-center text-white"
           style={{ background: "linear-gradient(90deg, #7C6FE0, #4CAF82)" }}
         >
