@@ -13,8 +13,8 @@ export function getServiceClient() {
 export interface Post {
   id: number;
   message_id: number;
-  text: string | null;
   caption: string | null;
+  body: string | null;
   photo_url: string | null;
   hashtags: string[];
   views: number;

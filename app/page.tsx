@@ -13,24 +13,30 @@ type Tab = "home" | "materials" | "checkin" | "progress";
 interface FilterState { hashtags: Hashtag[]; sort: "new" | "old"; }
 
 function postToMaterial(post: Post): Material {
-  const content = post.text || post.caption || "";
-  const titleMatch = content.match(/^(.+?)[\n\r]/);
-  const title = titleMatch ? titleMatch[1].replace(/[*_#]/g, "").trim() : content.slice(0, 60).trim();
-  const rest = titleMatch ? content.slice(titleMatch[0].length).trim() : "";
-  const subtitleMatch = rest.match(/^(.{10,120})/);
-  const subtitle = subtitleMatch ? subtitleMatch[1].replace(/[*_#]/g, "").trim() : "";
+  const caption = post.caption || "";
+  const body = post.body || "";
+
+  // Первая строка caption = заголовок
+  const titleLine = caption.split("\n")[0].replace(/[*_]/g, "").trim();
+  const title = titleLine || "Материал из канала";
+
+  // Вторая строка caption или начало body = подзаголовок
+  const captionRest = caption.split("\n").slice(1).join(" ").replace(/[*_#]/g, "").trim();
+  const subtitle = (captionRest || body.slice(0, 120).replace(/[*_#\n]/g, " ")).trim();
 
   const validHashtags = post.hashtags.filter((h) => h.replace("#", "") in HASHTAG_META);
   const hashtags = validHashtags.map((h) => h.replace("#", "") as Hashtag);
 
+  const bodyLength = body.length || caption.length;
+
   return {
     id: String(post.id),
-    title: title || "Пост из канала",
+    title,
     subtitle,
-    hashtags: hashtags.length > 0 ? hashtags : [],
-    readTime: `${Math.max(1, Math.ceil(content.length / 1200))} мин`,
+    hashtags,
+    readTime: `${Math.max(1, Math.ceil(bodyLength / 1000))} мин`,
     cover: post.photo_url || undefined,
-    body: content,
+    body: body || caption,
   };
 }
 
