@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mentor Community — Фундамент успешной личности</title>
+
+  <!-- Шрифты бренда (подобраны бесплатные близкие): Onest + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- Дизайн-система -->
+  <link rel="stylesheet" href="../design-system/tokens.css" />
+  <link rel="stylesheet" href="../design-system/slides.css" />
+
+  <!-- Локальные доводки только для этой презентации (бренд/токены не трогаем) -->
+  <style>
+    /* Компактные шаги — чтобы 6 пунктов плана влезли в квадрат 1:1 */
+    .steps--compact { gap: var(--mc-space-2); }
+    .steps--compact .step { padding: 14px var(--mc-space-5); }
+    .steps--compact .step__num { width: 52px; height: 52px; }
+    .steps--compact .step__text { font-size: 25px; line-height: 1.2; }
+    .steps--compact .step__text b { color: var(--mc-primary-bright); font-weight: var(--mc-fw-bold); }
+
+    /* Список книг на слайде «Источники» */
+    .booklist { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+    .book {
+      display: flex; gap: var(--mc-space-3); align-items: baseline;
+      border-bottom: 1px solid var(--mc-ink-border); padding-bottom: 14px;
+    }
+    .book:last-child { border-bottom: 0; }
+    .book__a { font-weight: var(--mc-fw-bold); color: var(--mc-text); white-space: nowrap; }
+    .book__t { color: var(--mc-text-muted); }
+  </style>
+</head>
+<body>
+
+  <!-- ===== SVG-символы: знак логотипа, кольцо для фона, стрелки ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="mc-mark" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="7"/>
+        <circle cx="50"   cy="12" r="10" fill="currentColor"/>
+        <circle cx="82.9" cy="69" r="10" fill="currentColor"/>
+        <circle cx="17.1" cy="69" r="10" fill="currentColor"/>
+      </symbol>
+      <symbol id="mc-ring-lg" viewBox="0 0 200 200">
+        <circle cx="100"   cy="100" r="90" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="100"   cy="10"  r="11" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="177.9" cy="145" r="11" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="22.1"  cy="145" r="11" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      </symbol>
+      <marker id="ah" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#4f8bff"/>
+      </marker>
+      <marker id="ahm" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#6b6e78"/>
+      </marker>
+    </defs>
+  </svg>
+
+  <div class="deck">
+
+    <!-- ============ 01 · Обложка ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--c"><svg><use href="#mc-ring-lg"/></svg></span>
+        <span class="glow glow--tr"></span>
+      </div>
+
+      <div class="slide__top">
+        <span class="logo">
+          <span class="logo__mark"><svg><use href="#mc-mark"/></svg></span>
+          <span class="logo__word">mntr<br>comm</span>
+        </span>
+      </div>
+
+      <div class="slide__body slide__body--center items-center t-center">
+        <div class="pill pill--glass" style="padding: var(--mc-space-6) var(--mc-space-7)">
+          <p class="display">Фундамент<br>успешной<br>личности</p>
+        </div>
+        <p class="lead accent mt-3 mw-30">То, что помогает добиваться результатов в любой сфере — не талант, а конструкция, которую можно построить.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>01</span></div>
+    </section>
+
+    <!-- ============ 02 · Тезис ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--tr"><svg><use href="#mc-ring-lg"/></svg></span>
+      </div>
+
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <span class="label">Главная мысль</span>
+        <p class="display mw-24">Успех — не удача. Это <span class="accent">конструкция</span>.</p>
+        <p class="lead mw-36">Способности, характер и привычки не выдают при рождении — их строят. Этот гайд про шесть опор такого фундамента.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>02</span></div>
+    </section>
+
+    <!-- ============ 03 · Факт / что реально предсказывает ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Что реально решает</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">Характер обгоняет голый интеллект</h1>
+
+        <div class="diagram diagram--md">
+          <svg viewBox="0 0 600 250" role="img" aria-label="Сравнение предикторов успеха">
+            <!-- Талант -->
+            <text x="4" y="32" class="dgm-cap" font-size="17">Талант</text>
+            <rect x="4" y="42" width="120" height="34" rx="8" fill="#f4f5f7" opacity="0.22"/>
+            <!-- IQ -->
+            <text x="4" y="108" class="dgm-cap" font-size="17">IQ</text>
+            <rect x="4" y="118" width="220" height="34" rx="8" fill="#f4f5f7" opacity="0.35"/>
+            <!-- Характер -->
+            <text x="4" y="184" class="dgm-cap" font-size="17" fill="#4f8bff">Добросовестность · упорство · привычки</text>
+            <rect x="4" y="194" width="430" height="34" rx="8" fill="#2d6bf6"/>
+            <text x="446" y="216" font-size="20" font-weight="700" fill="#4f8bff" font-family="Onest">сильнее</text>
+          </svg>
+        </div>
+
+        <p class="lead mw-36"><strong>Добросовестность</strong> — единственная черта характера, что предсказывает успех почти в любой профессии (мета-анализ Баррика и Маунта; данные &gt;1 млн человек).</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>03</span></div>
+    </section>
+
+    <!-- ============ 04 · Карта: 6 опор ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--bl"><svg><use href="#mc-ring-lg"/></svg></span>
+      </div>
+
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Карта гайда</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">Фундамент из 6 опор</h1>
+
+        <div class="diagram">
+          <svg viewBox="0 0 600 340" role="img" aria-label="Пирамида из шести опор">
+            <!-- снизу (фундамент) вверх -->
+            <g font-family="Onest" font-weight="600" font-size="20" text-anchor="middle">
+              <rect x="150" y="16"  width="300" height="46" rx="12" fill="#2d6bf6" fill-opacity="0.34" stroke="#4f8bff" stroke-width="1.5"/>
+              <text x="300" y="45"  fill="#f4f5f7">6 · Окружение и менторство</text>
+
+              <rect x="125" y="72"  width="350" height="46" rx="12" fill="#2d6bf6" fill-opacity="0.46" stroke="#4f8bff" stroke-width="1.5"/>
+              <text x="300" y="101" fill="#f4f5f7">5 · Смысл и направление</text>
+
+              <rect x="100" y="128" width="400" height="46" rx="12" fill="#2d6bf6" fill-opacity="0.58" stroke="#4f8bff" stroke-width="1.5"/>
+              <text x="300" y="157" fill="#ffffff">4 · Эмоции и устойчивость</text>
+
+              <rect x="75"  y="184" width="450" height="46" rx="12" fill="#2d6bf6" fill-opacity="0.72" stroke="#4f8bff" stroke-width="1.5"/>
+              <text x="300" y="213" fill="#ffffff">3 · Привычки и системы</text>
+
+              <rect x="50"  y="240" width="500" height="46" rx="12" fill="#2d6bf6" fill-opacity="0.86" stroke="#4f8bff" stroke-width="1.5"/>
+              <text x="300" y="269" fill="#ffffff">2 · Дисциплина и характер</text>
+
+              <rect x="20"  y="296" width="560" height="46" rx="12" fill="#2d6bf6" stroke="#4f8bff" stroke-width="1.5"/>
+              <text x="300" y="325" fill="#ffffff">1 · Мышление</text>
+            </g>
+          </svg>
+        </div>
+
+        <p class="lead t-center mw-36">Снизу вверх — от мышления к окружению. Слабая нижняя опора ведёт всю конструкцию.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>04</span></div>
+    </section>
+
+    <!-- ============ 05 · Разделитель: Опора 1 ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--c"><svg><use href="#mc-ring-lg"/></svg></span>
+        <span class="glow glow--b"></span>
+      </div>
+      <div class="slide__body slide__body--center items-center t-center gap-3">
+        <span class="label">Опора 01</span>
+        <p class="display mw-24">Мышление</p>
+        <p class="lead mw-36">Как ты думаешь о своих способностях — определяет, начнёшь ли ты вообще.</p>
+      </div>
+      <div class="slide__foot"><span>mentor-community</span><span>05</span></div>
+    </section>
+
+    <!-- ============ 06 · Growth mindset ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Кэрол Дуэк · «Гибкое сознание»</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">Две установки</h1>
+
+        <div class="diagram diagram--md">
+          <svg viewBox="0 0 600 280" role="img" aria-label="Установка на фиксацию против установки на рост">
+            <!-- Фиксация: тупик -->
+            <circle cx="160" cy="240" r="9" fill="#6b6e78"/>
+            <path d="M160,240 L160,120" stroke="#6b6e78" stroke-width="4" stroke-dasharray="2 10" stroke-linecap="round"/>
+            <line x1="138" y1="98"  x2="182" y2="142" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/>
+            <line x1="182" y1="98"  x2="138" y2="142" stroke="#ef4444" stroke-width="6" stroke-linecap="round"/>
+            <text x="160" y="270" text-anchor="middle" font-family="Onest" font-weight="600" font-size="21" fill="#f4f5f7">«Я не могу»</text>
+
+            <!-- Рост: вверх -->
+            <circle cx="400" cy="240" r="9" fill="#4f8bff"/>
+            <path d="M400,240 C430,190 410,150 470,86" fill="none" stroke="#2d6bf6" stroke-width="5" stroke-linecap="round" marker-end="url(#ah)"/>
+            <circle cx="430" cy="178" r="5" fill="#4f8bff"/>
+            <circle cx="418" cy="150" r="5" fill="#4f8bff"/>
+            <circle cx="438" cy="124" r="5" fill="#4f8bff"/>
+            <text x="400" y="270" text-anchor="middle" font-family="Onest" font-weight="600" font-size="21" fill="#f4f5f7">«Я <tspan fill="#4f8bff">ещё</tspan> не могу»</text>
+          </svg>
+        </div>
+
+        <p class="lead mw-36"><strong>Честно:</strong> в среднем эффект скромный, но сильнее всего работает у тех, <span class="accent">кому труднее</span> — на старте и в кризисе.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>06</span></div>
+    </section>
+
+    <!-- ============ 07 · Локус контроля ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Локус контроля</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">Вкладывайся в зону влияния</h1>
+
+        <div class="diagram diagram--md">
+          <svg viewBox="0 0 600 300" role="img" aria-label="Круг контроля">
+            <circle cx="300" cy="150" r="142" fill="#f4f5f7" fill-opacity="0.05" stroke="#6b6e78" stroke-width="2"/>
+            <circle cx="300" cy="150" r="88" fill="#2d6bf6"/>
+            <text x="300" y="24" text-anchor="middle" class="dgm-cap" font-size="16">Вне власти</text>
+            <text x="300" y="288" text-anchor="middle" font-size="16" fill="#6b6e78" font-family="JetBrains Mono">мнения · прошлое · итог</text>
+            <text x="300" y="142" text-anchor="middle" font-family="Onest" font-weight="700" font-size="24" fill="#ffffff">В моей власти</text>
+            <text x="300" y="172" text-anchor="middle" font-family="Onest" font-size="17" fill="#ffffff" opacity="0.9">действия · усилие · реакция</text>
+          </svg>
+        </div>
+
+        <p class="lead mw-36">Сильные люди тратят энергию на то, что <strong>в их власти</strong>, и отпускают остальное. Это и есть ответственность.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>07</span></div>
+    </section>
+
+    <!-- ============ 08 · Разделитель: Опора 2 ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--tr"><svg><use href="#mc-ring-lg"/></svg></span>
+        <span class="glow glow--tr"></span>
+      </div>
+      <div class="slide__body slide__body--center items-center t-center gap-3">
+        <span class="label">Опора 02</span>
+        <p class="display mw-24">Дисциплина<br>и характер</p>
+        <p class="lead mw-36">Не порыв, а способность продолжать, когда мотивация ушла.</p>
+      </div>
+      <div class="slide__foot"><span>mentor-community</span><span>08</span></div>
+    </section>
+
+    <!-- ============ 09 · Grit ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Ангела Дакворт · grit</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">Упорство бьёт талант</h1>
+
+        <div class="diagram diagram--sm">
+          <svg viewBox="0 0 600 200" role="img" aria-label="Вспышка против упорства">
+            <text x="4" y="46" class="dgm-cap" font-size="16">Талант без упорства</text>
+            <path d="M10,72 L180,72" stroke="#6b6e78" stroke-width="4" stroke-linecap="round"/>
+            <path d="M180,72 L300,72" stroke="#6b6e78" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round"/>
+            <circle cx="300" cy="72" r="6" fill="#6b6e78"/>
+
+            <text x="4" y="140" font-size="16" fill="#4f8bff" font-family="JetBrains Mono" letter-spacing="0.04em">УПОРСТВО · ВДОЛГУЮ</text>
+            <line x1="10" y1="166" x2="556" y2="166" stroke="#2d6bf6" stroke-width="5" stroke-linecap="round" marker-end="url(#ah)"/>
+            <g fill="#4f8bff">
+              <circle cx="120" cy="166" r="4"/><circle cx="230" cy="166" r="4"/>
+              <circle cx="340" cy="166" r="4"/><circle cx="450" cy="166" r="4"/>
+            </g>
+          </svg>
+        </div>
+
+        <p class="lead mw-36">В Вест-Пойнте кадеты с упорством на ступень выше имели <strong>на 54–60% больше шансов</strong> пройти жёсткий отбор — сильнее, чем SAT и физподготовка. Грит = страсть + настойчивость.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>09</span></div>
+    </section>
+
+    <!-- ============ 10 · Зефирный тест ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Зефирный тест · Мишел</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">Самоконтроль — навык, не магия</h1>
+
+        <div class="diagram diagram--sm">
+          <svg viewBox="0 0 600 240" role="img" aria-label="Весы: сейчас против потом">
+            <!-- стойка -->
+            <line x1="300" y1="60" x2="300" y2="205" stroke="#6b6e78" stroke-width="5"/>
+            <path d="M270,205 L330,205 L312,225 L288,225 Z" fill="#6b6e78"/>
+            <!-- коромысло (наклон вправо — «потом» весомее) -->
+            <line x1="150" y1="78" x2="450" y2="110" stroke="#4f8bff" stroke-width="5" stroke-linecap="round"/>
+            <line x1="300" y1="60" x2="300" y2="94" stroke="#6b6e78" stroke-width="5"/>
+            <!-- левая чаша: 1 сейчас -->
+            <circle cx="150" cy="78" r="30" fill="none" stroke="#6b6e78" stroke-width="3"/>
+            <text x="150" y="86" text-anchor="middle" font-family="Onest" font-weight="700" font-size="26" fill="#f4f5f7">1</text>
+            <text x="150" y="138" text-anchor="middle" class="dgm-cap" font-size="15">сейчас</text>
+            <!-- правая чаша: 2 потом -->
+            <circle cx="450" cy="110" r="42" fill="#2d6bf6"/>
+            <text x="450" y="120" text-anchor="middle" font-family="Onest" font-weight="700" font-size="34" fill="#ffffff">2</text>
+            <text x="450" y="176" text-anchor="middle" font-size="15" fill="#4f8bff" font-family="JetBrains Mono" letter-spacing="0.04em">ПОТОМ</text>
+          </svg>
+        </div>
+
+        <p class="lead mw-36">Умение ждать ради большего связано с результатами. <strong>Но честно:</strong> половину связи объясняет среда и поддержка — значит, выдержку можно <span class="accent">выстроить</span>.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>10</span></div>
+    </section>
+
+    <!-- ============ 11 · Разделитель: Опора 3 ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--bl"><svg><use href="#mc-ring-lg"/></svg></span>
+      </div>
+      <div class="slide__body slide__body--center items-center t-center gap-3">
+        <span class="label">Опора 03</span>
+        <p class="display mw-24">Привычки<br>и системы</p>
+        <p class="lead mw-36">Результат — это не рывок, а то, что ты делаешь каждый день автоматически.</p>
+      </div>
+      <div class="slide__foot"><span>mentor-community</span><span>11</span></div>
+    </section>
+
+    <!-- ============ 12 · 1% сложный процент ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Джеймс Клир · сложный процент</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">1% в день решает всё</h1>
+
+        <div class="diagram diagram--md">
+          <svg viewBox="0 0 600 250" role="img" aria-label="Кривая сложного роста">
+            <!-- база 1x -->
+            <line x1="40" y1="150" x2="560" y2="150" stroke="#2a2d35" stroke-width="2" stroke-dasharray="4 6"/>
+            <text x="40" y="142" font-size="15" fill="#6b6e78" font-family="JetBrains Mono">×1</text>
+            <!-- рост +1% -->
+            <path d="M40,150 C330,148 470,110 558,24" fill="none" stroke="#2d6bf6" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="558" cy="24" r="7" fill="#4f8bff"/>
+            <text x="548" y="20" text-anchor="end" font-family="Onest" font-weight="800" font-size="30" fill="#4f8bff">×37,8</text>
+            <text x="150" y="92" font-size="17" fill="#4f8bff" font-family="Onest" font-weight="600">+1% каждый день</text>
+            <!-- спад −1% -->
+            <path d="M40,150 C320,158 470,196 558,214" fill="none" stroke="#ef4444" stroke-width="3.5" stroke-dasharray="6 6" stroke-linecap="round"/>
+            <text x="548" y="232" text-anchor="end" font-family="Onest" font-weight="700" font-size="20" fill="#ef4444">×0,03</text>
+            <text x="150" y="208" font-size="16" fill="#6b6e78" font-family="Onest">−1% каждый день</text>
+            <text x="300" y="248" text-anchor="middle" class="dgm-cap" font-size="14">365 дней</text>
+          </svg>
+        </div>
+
+        <p class="lead mw-36"><strong>Лучше на 1% каждый день — и за год ты вырастешь в 37,8 раза.</strong> Привычки — это сложный процент твоей жизни.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>12</span></div>
+    </section>
+
+    <!-- ============ 13 · Системы > цели + петля привычки ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Системы &gt; цели</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">Цель задаёт курс. Система даёт результат.</h1>
+
+        <div class="diagram diagram--sm">
+          <svg viewBox="0 0 600 250" role="img" aria-label="Петля привычки">
+            <circle cx="300" cy="130" r="92" fill="none" stroke="#2d6bf6" stroke-width="2" stroke-opacity="0.35"/>
+            <!-- стрелки направления по кольцу -->
+            <path d="M360,58 A92 92 0 0 1 392 130" fill="none" stroke="#4f8bff" stroke-width="3" marker-end="url(#ah)"/>
+            <path d="M392,150 A92 92 0 0 1 235 195" fill="none" stroke="#4f8bff" stroke-width="3" marker-end="url(#ah)"/>
+            <path d="M214,180 A92 92 0 0 1 238 70" fill="none" stroke="#4f8bff" stroke-width="3" marker-end="url(#ah)"/>
+            <!-- три узла как в знаке бренда -->
+            <g font-family="Onest" font-weight="600" font-size="16" fill="#ffffff" text-anchor="middle">
+              <circle cx="300" cy="48"  r="40" fill="#2d6bf6"/><text x="300" y="54">Триггер</text>
+              <circle cx="380" cy="190" r="40" fill="#2d6bf6"/><text x="380" y="196">Действие</text>
+              <circle cx="220" cy="190" r="40" fill="#2d6bf6"/><text x="220" y="196">Награда</text>
+            </g>
+          </svg>
+        </div>
+
+        <p class="lead mw-36">Не «похудеть на 10 кг», а <strong>система ежедневных действий</strong>. Каждая привычка — петля: триггер → действие → награда.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>13</span></div>
+    </section>
+
+    <!-- ============ 14 · Осознанная практика ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--tr"><svg><use href="#mc-ring-lg"/></svg></span>
+      </div>
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <span class="label">Андерс Эрикссон · практика</span>
+        <p class="display mw-24">Дело в <span class="accent">качестве</span>, а не в часах</p>
+        <div class="callout">
+          <span class="callout__icon">!</span>
+          <p>«10 000 часов» — упрощение. Осознанная практика объясняет ~26% мастерства в шахматах и 21% в музыке: важно не «сколько», а «как» ты тренируешься — на грани возможного, с обратной связью.</p>
+        </div>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>14</span></div>
+    </section>
+
+    <!-- ============ 15 · Разделитель: Опора 4 ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--c"><svg><use href="#mc-ring-lg"/></svg></span>
+        <span class="glow glow--b"></span>
+      </div>
+      <div class="slide__body slide__body--center items-center t-center gap-3">
+        <span class="label">Опора 04</span>
+        <p class="display mw-24">Эмоции<br>и устойчивость</p>
+        <p class="lead mw-36">Управлять собой под давлением — навык, который отличает лучших.</p>
+      </div>
+      <div class="slide__foot"><span>mentor-community</span><span>15</span></div>
+    </section>
+
+    <!-- ============ 16 · EQ — 4 области ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Дэниел Гоулман · EQ</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">Четыре навыка эмоций</h1>
+
+        <div class="diagram diagram--md">
+          <svg viewBox="0 0 600 290" role="img" aria-label="Четыре области эмоционального интеллекта">
+            <text x="160" y="18" text-anchor="middle" class="dgm-cap" font-size="14">Понимаю</text>
+            <text x="440" y="18" text-anchor="middle" class="dgm-cap" font-size="14">Управляю</text>
+
+            <g font-family="Onest">
+              <rect x="20"  y="30"  width="270" height="110" rx="16" fill="#2d6bf6" fill-opacity="0.10" stroke="#2d6bf6" stroke-width="1.5"/>
+              <text x="40"  y="66"  class="dgm-cap" font-size="14" fill="#6b6e78">Я</text>
+              <text x="40"  y="100" font-weight="700" font-size="25" fill="#f4f5f7">Самосознание</text>
+
+              <rect x="310" y="30"  width="270" height="110" rx="16" fill="#2d6bf6" fill-opacity="0.10" stroke="#2d6bf6" stroke-width="1.5"/>
+              <text x="330" y="66"  class="dgm-cap" font-size="14" fill="#6b6e78">Я</text>
+              <text x="330" y="100" font-weight="700" font-size="25" fill="#f4f5f7">Саморегуляция</text>
+
+              <rect x="20"  y="156" width="270" height="110" rx="16" fill="#2d6bf6" fill-opacity="0.10" stroke="#2d6bf6" stroke-width="1.5"/>
+              <text x="40"  y="192" class="dgm-cap" font-size="14" fill="#6b6e78">Другие</text>
+              <text x="40"  y="226" font-weight="700" font-size="25" fill="#f4f5f7">Эмпатия</text>
+
+              <rect x="310" y="156" width="270" height="110" rx="16" fill="#2d6bf6" fill-opacity="0.10" stroke="#2d6bf6" stroke-width="1.5"/>
+              <text x="330" y="192" class="dgm-cap" font-size="14" fill="#6b6e78">Другие</text>
+              <text x="330" y="226" font-weight="700" font-size="25" fill="#f4f5f7">Отношения</text>
+            </g>
+          </svg>
+        </div>
+
+        <p class="lead mw-36">В среднем IQ предсказывает сильнее, но <span class="accent">EQ отличает «звёзд» — топ-10%</span> в своей роли.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>16</span></div>
+    </section>
+
+    <!-- ============ 17 · Стоицизм / дихотомия контроля ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Стоицизм · антихрупкость</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">Дихотомия контроля</h1>
+
+        <div class="diagram diagram--md">
+          <svg viewBox="0 0 600 300" role="img" aria-label="Что в моей власти, а что нет">
+            <circle cx="300" cy="150" r="142" fill="#f4f5f7" fill-opacity="0.05" stroke="#6b6e78" stroke-width="2"/>
+            <circle cx="300" cy="150" r="88" fill="#2d6bf6"/>
+            <text x="300" y="24" text-anchor="middle" class="dgm-cap" font-size="16">Не в моей власти</text>
+            <text x="300" y="288" text-anchor="middle" font-size="16" fill="#6b6e78" font-family="JetBrains Mono">оценки · рынок · чужой выбор</text>
+            <text x="300" y="142" text-anchor="middle" font-family="Onest" font-weight="700" font-size="24" fill="#ffffff">В моей власти</text>
+            <text x="300" y="172" text-anchor="middle" font-family="Onest" font-size="17" fill="#ffffff" opacity="0.9">суждение · выбор · усилие</text>
+          </svg>
+        </div>
+
+        <p class="lead mw-36">Эпиктет учил делить всё на «в моей власти» и «нет». Талеб добавляет: <strong>правильный стресс делает сильнее</strong> — это антихрупкость.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>17</span></div>
+    </section>
+
+    <!-- ============ 18 · Разделитель: Опора 5 ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--bl"><svg><use href="#mc-ring-lg"/></svg></span>
+        <span class="glow glow--tr"></span>
+      </div>
+      <div class="slide__body slide__body--center items-center t-center gap-3">
+        <span class="label">Опора 05</span>
+        <p class="display mw-24">Смысл<br>и направление</p>
+        <p class="lead mw-36">Сильное «зачем» держит, когда становится тяжело.</p>
+      </div>
+      <div class="slide__foot"><span>mentor-community</span><span>18</span></div>
+    </section>
+
+    <!-- ============ 19 · Зачем + SDT ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Франкл · Деси и Райан</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">Сильное «зачем»</h1>
+
+        <div class="diagram diagram--md">
+          <svg viewBox="0 0 600 280" role="img" aria-label="Три потребности внутренней мотивации">
+            <g fill="#2d6bf6" fill-opacity="0.14" stroke="#4f8bff" stroke-width="1.5">
+              <circle cx="300" cy="120" r="100"/>
+              <circle cx="222" cy="200" r="100"/>
+              <circle cx="378" cy="200" r="100"/>
+            </g>
+            <text x="300" y="56"  text-anchor="middle" font-family="Onest" font-weight="700" font-size="22" fill="#f4f5f7">Автономия</text>
+            <text x="150" y="244" text-anchor="middle" font-family="Onest" font-weight="700" font-size="22" fill="#f4f5f7">Компетентность</text>
+            <text x="452" y="244" text-anchor="middle" font-family="Onest" font-weight="700" font-size="22" fill="#f4f5f7">Связанность</text>
+            <text x="300" y="172" text-anchor="middle" font-family="JetBrains Mono" font-size="15" fill="#ffffff" letter-spacing="0.04em">МОТИВАЦИЯ</text>
+          </svg>
+        </div>
+
+        <p class="lead mw-36">Франкл: «Кто знает <em>зачем</em>, выдержит почти любое <em>как</em>». Топливо изнутри дают три вещи: <strong>автономия, компетентность, связанность</strong>.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>19</span></div>
+    </section>
+
+    <!-- ============ 20 · Разделитель: Опора 6 ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--c"><svg><use href="#mc-ring-lg"/></svg></span>
+        <span class="glow glow--b"></span>
+      </div>
+      <div class="slide__body slide__body--center items-center t-center gap-3">
+        <span class="label">Опора 06</span>
+        <p class="display mw-24">Окружение<br>и менторство</p>
+        <p class="lead mw-36">Среда тянет за собой сильнее, чем сила воли.</p>
+      </div>
+      <div class="slide__foot"><span>mentor-community</span><span>20</span></div>
+    </section>
+
+    <!-- ============ 21 · Окружение + ментор ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Окружение решает</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">Ты — среднее своего окружения</h1>
+
+        <div class="diagram diagram--sm">
+          <svg viewBox="0 0 600 260" role="img" aria-label="Сеть окружения и ментор">
+            <g stroke="#2d6bf6" stroke-width="2" stroke-opacity="0.45">
+              <line x1="300" y1="130" x2="300" y2="42"/>
+              <line x1="300" y1="130" x2="470" y2="86"/>
+              <line x1="300" y1="130" x2="468" y2="214"/>
+              <line x1="300" y1="130" x2="132" y2="214"/>
+              <line x1="300" y1="130" x2="130" y2="86"/>
+            </g>
+            <!-- люди вокруг -->
+            <g fill="#16171c" stroke="#4f8bff" stroke-width="2">
+              <circle cx="470" cy="86"  r="30"/>
+              <circle cx="468" cy="214" r="30"/>
+              <circle cx="132" cy="214" r="30"/>
+              <circle cx="130" cy="86"  r="30"/>
+            </g>
+            <!-- ментор (верхний, яркий) -->
+            <circle cx="300" cy="42" r="36" fill="#2d6bf6"/>
+            <text x="300" y="48" text-anchor="middle" font-family="Onest" font-weight="600" font-size="16" fill="#ffffff">Ментор</text>
+            <!-- ты в центре -->
+            <circle cx="300" cy="130" r="44" fill="#ffffff"/>
+            <text x="300" y="138" text-anchor="middle" font-family="Onest" font-weight="700" font-size="22" fill="#15161c">Ты</text>
+          </svg>
+        </div>
+
+        <p class="lead mw-36">«Ты — среднее из пяти, с кем проводишь время» (Джим Рон). <strong>Ментор ускоряет путь:</strong> у наставляемых лучше карьерные и мотивационные исходы.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>21</span></div>
+    </section>
+
+    <!-- ============ 22 · Свод: фундамент в сборе ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--tr"><svg><use href="#mc-ring-lg"/></svg></span>
+      </div>
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Фундамент в сборе</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">Шесть опор — одна система</h1>
+
+        <div class="diagram">
+          <svg viewBox="0 0 600 340" role="img" aria-label="Пирамида из шести опор">
+            <g font-family="Onest" font-weight="600" font-size="20" text-anchor="middle">
+              <rect x="150" y="16"  width="300" height="46" rx="12" fill="#2d6bf6" fill-opacity="0.34" stroke="#4f8bff" stroke-width="1.5"/>
+              <text x="300" y="45"  fill="#f4f5f7">6 · Окружение и менторство</text>
+              <rect x="125" y="72"  width="350" height="46" rx="12" fill="#2d6bf6" fill-opacity="0.46" stroke="#4f8bff" stroke-width="1.5"/>
+              <text x="300" y="101" fill="#f4f5f7">5 · Смысл и направление</text>
+              <rect x="100" y="128" width="400" height="46" rx="12" fill="#2d6bf6" fill-opacity="0.58" stroke="#4f8bff" stroke-width="1.5"/>
+              <text x="300" y="157" fill="#ffffff">4 · Эмоции и устойчивость</text>
+              <rect x="75"  y="184" width="450" height="46" rx="12" fill="#2d6bf6" fill-opacity="0.72" stroke="#4f8bff" stroke-width="1.5"/>
+              <text x="300" y="213" fill="#ffffff">3 · Привычки и системы</text>
+              <rect x="50"  y="240" width="500" height="46" rx="12" fill="#2d6bf6" fill-opacity="0.86" stroke="#4f8bff" stroke-width="1.5"/>
+              <text x="300" y="269" fill="#ffffff">2 · Дисциплина и характер</text>
+              <rect x="20"  y="296" width="560" height="46" rx="12" fill="#2d6bf6" stroke="#4f8bff" stroke-width="1.5"/>
+              <text x="300" y="325" fill="#ffffff">1 · Мышление</text>
+            </g>
+          </svg>
+        </div>
+
+        <p class="lead t-center mw-36">Слабая опора — и всю конструкцию ведёт. Сильные — и результат приходит в любой сфере.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>22</span></div>
+    </section>
+
+    <!-- ============ 23 · План на 30 дней ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">План на 30 дней</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">По одному шагу на опору</h1>
+        <ol class="steps steps--compact">
+          <li class="step"><span class="step__num">1</span><span class="step__text"><b>Мышление:</b> лови «я не могу» → меняй на «я ещё не могу»</span></li>
+          <li class="step"><span class="step__num">2</span><span class="step__text"><b>Характер:</b> одно дело в день, которое доводишь до конца</span></li>
+          <li class="step"><span class="step__num">3</span><span class="step__text"><b>Привычки:</b> одна привычка +1% — крошечная, но ежедневно</span></li>
+          <li class="step"><span class="step__num">4</span><span class="step__text"><b>Эмоции:</b> 2 минуты в день — что я чувствую и почему</span></li>
+          <li class="step"><span class="step__num">5</span><span class="step__text"><b>Смысл:</b> запиши своё «зачем» одной фразой</span></li>
+          <li class="step"><span class="step__num">6</span><span class="step__text"><b>Окружение:</b> найди одного ментора или сильную среду</span></li>
+        </ol>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>23</span></div>
+    </section>
+
+    <!-- ============ 24 · Финал / CTA ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--c"><svg><use href="#mc-ring-lg"/></svg></span>
+        <span class="glow glow--b"></span>
+      </div>
+
+      <div class="slide__top">
+        <span class="logo">
+          <span class="logo__mark"><svg><use href="#mc-mark"/></svg></span>
+          <span class="logo__word">mntr<br>comm</span>
+        </span>
+      </div>
+
+      <div class="slide__body slide__body--center items-center t-center gap-3">
+        <span class="label">Твой ход</span>
+        <p class="display mw-24">Начни с <span class="accent">одной опоры</span> сегодня.</p>
+        <p class="lead mw-36">Фундамент строится не за день, а по кирпичу. Сохрани гайд и возвращайся к шагам. Поделись с тем, кто строит себя.</p>
+        <div class="tags mt-2">
+          <span class="tag">Сохранить</span>
+          <span class="tag">Поделиться</span>
+        </div>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>24</span></div>
+    </section>
+
+    <!-- ============ 25 · Источники ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--tr"><svg><use href="#mc-ring-lg"/></svg></span>
+      </div>
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+        <span class="label label--muted">Что почитать</span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1 class="mw-24">Источники и книги</h1>
+        <div class="booklist">
+          <div class="book"><span class="book__a">Кэрол Дуэк</span><span class="book__t">«Гибкое сознание» — установка на рост</span></div>
+          <div class="book"><span class="book__a">Ангела Дакворт</span><span class="book__t">«Твёрдость характера» — grit</span></div>
+          <div class="book"><span class="book__a">Джеймс Клир</span><span class="book__t">«Атомные привычки» — системы и 1%</span></div>
+          <div class="book"><span class="book__a">Дэниел Гоулман</span><span class="book__t">«Эмоциональный интеллект»</span></div>
+          <div class="book"><span class="book__a">Виктор Франкл</span><span class="book__t">«Человек в поисках смысла»</span></div>
+          <div class="book"><span class="book__a">Нассим Талеб</span><span class="book__t">«Антихрупкость»</span></div>
+        </div>
+        <p class="lead mw-36">Цифры — из мета-анализов: Баррик и Маунт, Дакворт, Уоттс (2018), Деси и Райан, Аллен и Эби.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>25</span></div>
+    </section>
+
+  </div>
+
+  <!-- Просмотрщик: фит-в-окно + листание (← →, клик, свайп). #grid — лента для экспорта -->
+  <script src="../design-system/present.js" defer></script>
+</body>
+</html>

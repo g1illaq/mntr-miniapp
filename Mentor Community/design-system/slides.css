@@ -1,0 +1,326 @@
+/* ============================================================
+   Mentor Community — стили слайдов (квадрат 1:1, тёмная тема)
+   Всё на токенах из tokens.css. Компоненты повторяют визуальный
+   язык бренда: pill-карточки, нумерованные пилюли, моно-метки,
+   рамки картинок, мотив кольца на фоне.
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: #08080a;                 /* область вокруг слайдов */
+  font-family: var(--mc-font-body);
+  color: var(--mc-text);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Лента слайдов */
+.deck {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--mc-space-6);
+  padding: var(--mc-space-6);
+}
+
+/* ---------- Контейнер слайда 1:1 ---------- */
+.slide {
+  position: relative;
+  width: var(--slide-w);
+  height: var(--slide-h);
+  background: var(--mc-ink);
+  color: var(--mc-text);
+  border-radius: var(--mc-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--mc-shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mc-space-5);
+  padding: var(--slide-pad);
+}
+
+/* Контент поверх фоновой графики */
+.slide__top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+.slide__body {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mc-space-4);
+}
+.slide__body--center { justify-content: center; }
+.slide__body--end    { justify-content: flex-end; }
+.slide__foot {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--mc-font-mono);
+  font-size: var(--mc-fs-caption);
+  letter-spacing: .04em;
+  color: var(--mc-text-faint);
+}
+
+/* ---------- Фоновая графика ---------- */
+.slide__decor {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Мотив кольца (мотив логотипа крупным контуром) */
+.ring-bg {
+  position: absolute;
+  width: 760px;
+  height: 760px;
+  color: var(--mc-primary);
+  opacity: .18;
+}
+.ring-bg svg { width: 100%; height: 100%; display: block; }
+.ring-bg--tr { top: -190px; right: -170px; }
+.ring-bg--bl { bottom: -210px; left: -190px; }
+.ring-bg--c  {
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1000px; height: 1000px;
+  opacity: .12;
+}
+
+/* Синее свечение */
+.glow {
+  position: absolute;
+  width: 720px; height: 720px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(45,107,246,.45), transparent 68%);
+}
+.glow--tr { top: -260px; right: -200px; }
+.glow--b  { bottom: -420px; left: 50%; transform: translateX(-50%); width: 1100px; }
+
+/* Сетка-блюпринт */
+.grid-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--mc-ink-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--mc-ink-border) 1px, transparent 1px);
+  background-size: 120px 120px;
+  opacity: .55;
+  -webkit-mask-image: radial-gradient(circle at 50% 38%, #000, transparent 82%);
+          mask-image: radial-gradient(circle at 50% 38%, #000, transparent 82%);
+}
+
+/* ---------- Логотип ---------- */
+.logo { display: inline-flex; align-items: center; gap: var(--mc-space-2); color: var(--mc-logo); }
+.logo__mark { width: 56px; height: 56px; flex: none; }
+.logo__mark svg { width: 100%; height: 100%; display: block; }
+.logo__word {
+  font-family: var(--mc-font-heading);
+  font-weight: var(--mc-fw-bold);
+  font-size: 30px;
+  line-height: 1.0;
+  letter-spacing: -.01em;
+  text-transform: lowercase;
+  color: var(--mc-logo);
+}
+
+/* ---------- Типографика ---------- */
+.label {
+  font-family: var(--mc-font-mono);
+  font-size: var(--mc-fs-label);
+  font-weight: var(--mc-fw-medium);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--mc-primary-bright);
+}
+.label--muted { color: var(--mc-text-muted); }
+.label--white { color: var(--mc-text); }
+
+.slide .display {
+  font-family: var(--mc-font-heading);
+  font-size: var(--mc-fs-display);
+  font-weight: var(--mc-fw-black);
+  line-height: var(--mc-lh-tight);
+  letter-spacing: -.02em;
+  margin: 0;
+}
+.slide h1 {
+  font-family: var(--mc-font-heading);
+  font-size: var(--mc-fs-h1);
+  font-weight: var(--mc-fw-bold);
+  line-height: var(--mc-lh-tight);
+  letter-spacing: -.01em;
+  margin: 0;
+}
+.slide h2 {
+  font-family: var(--mc-font-heading);
+  font-size: var(--mc-fs-h2);
+  font-weight: var(--mc-fw-semi);
+  line-height: var(--mc-lh-snug);
+  margin: 0;
+}
+.slide p {
+  font-size: var(--mc-fs-body);
+  line-height: var(--mc-lh-normal);
+  margin: 0;
+  color: var(--mc-text);
+}
+.slide .lead {
+  font-size: var(--mc-fs-lead);
+  line-height: var(--mc-lh-normal);
+  color: var(--mc-text-muted);
+}
+.slide strong { font-weight: var(--mc-fw-bold); color: var(--mc-text); }
+.slide .accent { color: var(--mc-primary-bright); }
+
+/* ---------- Pill-карточки ---------- */
+.pill {
+  border-radius: var(--mc-radius-lg);
+  padding: var(--mc-space-4) var(--mc-space-5);
+}
+.pill--glass {
+  background: linear-gradient(160deg, rgba(45,107,246,.16), rgba(22,23,28,.55));
+  border: 1px solid var(--mc-ink-border);
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+}
+.pill--ghost  { background: var(--mc-ink-2); border: 1px solid var(--mc-ink-border); }
+.pill--outline{ background: rgba(45,107,246,.05); border: 1.5px solid var(--mc-primary); }
+.pill--blue   { background: var(--mc-primary); }
+.pill--blue, .pill--blue * { color: #fff; }
+.pill--white  { background: var(--mc-paper); }
+.pill--white, .pill--white * { color: var(--mc-on-paper); }
+
+/* Маленькие пилюли-теги (напр. «Чтение», «Проекты») */
+.tags { display: flex; flex-wrap: wrap; gap: var(--mc-space-2); }
+.tag {
+  display: inline-block;
+  border-radius: var(--mc-radius-pill);
+  padding: var(--mc-space-2) var(--mc-space-4);
+  background: var(--mc-primary);
+  color: #fff;
+  font-size: var(--mc-fs-body);
+  font-weight: var(--mc-fw-medium);
+}
+
+/* ---------- Нумерованный список (пилюли с кружком) ---------- */
+.steps { display: flex; flex-direction: column; gap: var(--mc-space-3); list-style: none; margin: 0; padding: 0; }
+.step {
+  display: flex;
+  align-items: center;
+  gap: var(--mc-space-4);
+  border: 1.5px solid var(--mc-primary);
+  border-radius: var(--mc-radius-lg);
+  padding: var(--mc-space-3) var(--mc-space-5);
+  background: rgba(45,107,246,.05);
+}
+.step__num {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 64px; height: 64px;
+  border-radius: var(--mc-radius-pill);
+  border: 1.5px solid var(--mc-primary);
+  color: var(--mc-primary-bright);
+  font-family: var(--mc-font-mono);
+  font-size: var(--mc-fs-body);
+}
+.step__text { font-size: var(--mc-fs-body); line-height: var(--mc-lh-snug); }
+
+/* ---------- Рамка картинки ---------- */
+.figure { border-radius: var(--mc-radius-lg); overflow: hidden; width: 100%; }
+.figure img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.figure--16x9 { aspect-ratio: 16 / 9; }
+/* Плейсхолдер, пока нет реальной картинки */
+.figure--ph {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--mc-primary-dark), var(--mc-ink-3));
+  color: var(--mc-text-muted);
+  font-family: var(--mc-font-mono);
+  font-size: var(--mc-fs-caption);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+/* ---------- Выноска / цитата с иконкой ---------- */
+.callout {
+  display: flex;
+  gap: var(--mc-space-3);
+  align-items: flex-start;
+  background: var(--mc-primary);
+  border-radius: var(--mc-radius-lg);
+  padding: var(--mc-space-4) var(--mc-space-5);
+}
+.callout, .callout * { color: #fff; }
+.callout__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 48px; height: 48px;
+  border-radius: var(--mc-radius-pill);
+  background: #fff;
+  color: var(--mc-primary) !important;
+  font-weight: var(--mc-fw-bold);
+}
+
+/* ---------- Утилиты ---------- */
+.t-center     { text-align: center; }
+.items-center { align-items: center; }
+.items-start  { align-items: flex-start; }
+.gap-2 { gap: var(--mc-space-2); }
+.gap-3 { gap: var(--mc-space-3); }
+.gap-5 { gap: var(--mc-space-5); }
+.mt-2  { margin-top: var(--mc-space-2); }
+.mt-3  { margin-top: var(--mc-space-3); }
+.mw-24 { max-width: 24ch; }
+.mw-30 { max-width: 30ch; }
+.mw-36 { max-width: 36ch; }
+
+/* ---------- Диаграммы (SVG-схемы в стиле бренда) ---------- */
+/* Контейнер для инлайн-SVG: центрирует и вписывает по ширине body.
+   Цвета внутри SVG берутся из токенов через fill/stroke="var(--mc-...)". */
+.diagram { width: 100%; display: flex; justify-content: center; }
+.diagram svg { width: 100%; height: auto; max-height: 600px; display: block; }
+.diagram--sm svg { max-height: 380px; }
+.diagram--md svg { max-height: 480px; }
+
+/* Текст внутри схем */
+.dgm-title { font-family: var(--mc-font-heading); font-weight: var(--mc-fw-bold); fill: var(--mc-text); }
+.dgm-label { font-family: var(--mc-font-heading); font-weight: var(--mc-fw-semi); fill: var(--mc-text); }
+.dgm-on-blue { fill: #fff; }
+.dgm-cap {
+  font-family: var(--mc-font-mono);
+  fill: var(--mc-text-muted);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.dgm-muted { fill: var(--mc-text-faint); }
+
+/* ---------- Печать в PDF: 1 слайд = 1 страница ---------- */
+@media print {
+  @page { size: 1080px 1080px; margin: 0; }
+  body { background: #fff; }
+  .deck { gap: 0; padding: 0; }
+  .slide {
+    border-radius: 0;
+    box-shadow: none;
+    page-break-after: always;
+    break-after: page;
+  }
+}

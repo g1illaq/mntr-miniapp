@@ -1,20 +1,8 @@
 export type Hashtag =
-  | "финансы"
-  | "саморазвитие"
-  | "softskills"
-  | "hardskills"
-  | "эффективность"
-  | "здоровье"
-  | "биохакинг"
-  | "образование"
-  | "digital"
-  | "библиотека"
-  | "разборы"
-  | "встречи"
-  | "анонсы"
-  | "промокоды"
-  | "обсуждения"
-  | "faq";
+  | "финансы" | "саморазвитие" | "softskills" | "hardskills"
+  | "эффективность" | "здоровье" | "биохакинг" | "образование"
+  | "digital" | "библиотека" | "разборы" | "встречи"
+  | "анонсы" | "промокоды" | "обсуждения" | "faq";
 
 export type Direction = "M" | "N" | "T" | "R";
 
@@ -24,7 +12,15 @@ export interface Material {
   subtitle: string;
   hashtags: Hashtag[];
   readTime: string;
-  direction?: Direction;
+  cover?: string;
+}
+
+export interface Collection {
+  id: string;
+  title: string;
+  cover: string;
+  count: number;
+  hashtag: Hashtag;
 }
 
 export interface MonthData {
@@ -37,30 +33,30 @@ export interface MonthData {
   sprintTotal: number;
 }
 
-export const HASHTAG_META: Record<Hashtag, { emoji: string; label: string; color: string }> = {
-  финансы:      { emoji: "💰", label: "Финансы",      color: "#4CAF82" },
-  саморазвитие: { emoji: "🧠", label: "Саморазвитие", color: "#7C6FE0" },
-  softskills:   { emoji: "🤝", label: "Soft Skills",  color: "#5B9BD5" },
-  hardskills:   { emoji: "🛠", label: "Hard Skills",  color: "#E07C4F" },
-  эффективность:{ emoji: "⚡", label: "Эффективность",color: "#E0C24F" },
-  здоровье:     { emoji: "🫀", label: "Здоровье",     color: "#E05C7C" },
-  биохакинг:    { emoji: "🔬", label: "Биохакинг",    color: "#4FCFE0" },
-  образование:  { emoji: "📖", label: "Образование",  color: "#A78BFA" },
-  digital:      { emoji: "💻", label: "Digital & ИИ", color: "#34D399" },
-  библиотека:   { emoji: "📚", label: "Библиотека",   color: "#F59E0B" },
-  разборы:      { emoji: "🔍", label: "Разборы",      color: "#6B7280" },
-  встречи:      { emoji: "🎙", label: "Встречи",      color: "#EC4899" },
-  анонсы:       { emoji: "📣", label: "Анонсы",       color: "#8B5CF6" },
-  промокоды:    { emoji: "🎁", label: "Промокоды",    color: "#10B981" },
-  обсуждения:   { emoji: "💬", label: "Обсуждения",   color: "#64748B" },
-  faq:          { emoji: "❓", label: "FAQ",           color: "#94A3B8" },
+export const HASHTAG_META: Record<Hashtag, { emoji: string; label: string }> = {
+  финансы:       { emoji: "💰", label: "Финансы"       },
+  саморазвитие:  { emoji: "🧠", label: "Саморазвитие"  },
+  softskills:    { emoji: "🤝", label: "Soft Skills"   },
+  hardskills:    { emoji: "🛠",  label: "Hard Skills"   },
+  эффективность: { emoji: "⚡", label: "Эффективность" },
+  здоровье:      { emoji: "🫀", label: "Здоровье"      },
+  биохакинг:     { emoji: "🔬", label: "Биохакинг"     },
+  образование:   { emoji: "📖", label: "Образование"   },
+  digital:       { emoji: "💻", label: "Digital & ИИ"  },
+  библиотека:    { emoji: "📚", label: "Библиотека"    },
+  разборы:       { emoji: "🔍", label: "Разборы"       },
+  встречи:       { emoji: "🎙", label: "Встречи"       },
+  анонсы:        { emoji: "📣", label: "Анонсы"        },
+  промокоды:     { emoji: "🎁", label: "Промокоды"     },
+  обсуждения:    { emoji: "💬", label: "Обсуждения"    },
+  faq:           { emoji: "❓", label: "FAQ"            },
 };
 
 export const DIRECTION_META: Record<Direction, { label: string; color: string; bg: string; full: string }> = {
-  M: { label: "Mind",         color: "#7C6FE0", bg: "#7C6FE015", full: "M — Мышление"   },
-  N: { label: "Navigation",   color: "#4CAF82", bg: "#4CAF8215", full: "N — Направление" },
-  T: { label: "Tempo",        color: "#E07C4F", bg: "#E07C4F15", full: "T — Тело & Ритм" },
-  R: { label: "Realization",  color: "#E0C24F", bg: "#E0C24F15", full: "R — Реализация"  },
+  M: { label: "Mind",        color: "#4f8bff", bg: "#2d6bf610", full: "M — Мышление"   },
+  N: { label: "Navigation",  color: "#4f8bff", bg: "#2d6bf610", full: "N — Направление" },
+  T: { label: "Tempo",       color: "#4f8bff", bg: "#2d6bf610", full: "T — Тело & Ритм" },
+  R: { label: "Realization", color: "#4f8bff", bg: "#2d6bf610", full: "R — Реализация"  },
 };
 
 export const currentMonth: MonthData = {
@@ -73,59 +69,77 @@ export const currentMonth: MonthData = {
   sprintTotal: 7,
 };
 
+export const collections: Collection[] = [
+  { id: "c1", title: "Финансовая грамотность", cover: "/mntrcomm_finansy.png",     count: 8,  hashtag: "финансы"       },
+  { id: "c2", title: "ИИ и инструменты",       cover: "/ai_cover.png",              count: 6,  hashtag: "digital"       },
+  { id: "c3", title: "Soft Skills",            cover: "/softskills_cover.png",      count: 5,  hashtag: "softskills"    },
+  { id: "c4", title: "Продуктивность",         cover: "/productivity_cover.png",    count: 9,  hashtag: "эффективность" },
+  { id: "c5", title: "Библиотека",             cover: "/books_cover.png",           count: 12, hashtag: "библиотека"    },
+  { id: "c6", title: "Маркетплейсы",           cover: "/marketplaces_cover.png",    count: 4,  hashtag: "hardskills"    },
+];
+
 export const materials: Material[] = [
   {
     id: "1",
-    title: "Почему мы не можем сосредоточиться",
-    subtitle: "Как работает внимание и что его разрушает в эпоху информационного перегруза",
-    hashtags: ["саморазвитие", "эффективность"],
-    direction: "M",
-    readTime: "7 мин",
+    title: "Глубокая работа",
+    subtitle: "Как держать фокус 4 часа подряд в мире, который борется за твоё внимание. Внимание — твоя новая валюта.",
+    hashtags: ["эффективность", "саморазвитие"],
+    readTime: "10 мин",
+    cover: "/productivity_cover.png",
   },
   {
     id: "2",
-    title: "Принципы без компромиссов",
-    subtitle: "Как найти свои ценности и принимать решения из осознанной позиции",
-    hashtags: ["саморазвитие", "softskills"],
-    direction: "N",
-    readTime: "9 мин",
+    title: "Фундамент успешной личности",
+    subtitle: "Ключевые принципы, на которых строится устойчивое развитие — мышление, ценности, действия.",
+    hashtags: ["саморазвитие"],
+    readTime: "8 мин",
   },
   {
     id: "3",
-    title: "Сон как основа продуктивности",
-    subtitle: "Что происходит с мозгом когда ты не высыпаешься — наука и практика",
-    hashtags: ["здоровье", "биохакинг"],
-    direction: "T",
-    readTime: "6 мин",
+    title: "Финансовая грамотность: база",
+    subtitle: "Как выстроить личный бюджет, начать копить и перестать жить от зарплаты до зарплаты.",
+    hashtags: ["финансы"],
+    readTime: "9 мин",
+    cover: "/mntrcomm_finansy.png",
   },
   {
     id: "4",
-    title: "Система вместо мотивации",
-    subtitle: "Почему дисциплина надёжнее вдохновения и как выстроить свою систему",
-    hashtags: ["эффективность", "саморазвитие"],
-    direction: "R",
-    readTime: "8 мин",
+    title: "ChatGPT и ИИ в работе",
+    subtitle: "10 реальных кейсов как использовать ИИ чтобы делать задачи в 3 раза быстрее.",
+    hashtags: ["digital", "hardskills"],
+    readTime: "12 мин",
+    cover: "/ai_cover.png",
   },
   {
     id: "5",
-    title: "Deep Work: практика глубокой работы",
-    subtitle: "Как работать в состоянии потока каждый день — метод Кэла Ньюпорта",
-    hashtags: ["эффективность", "библиотека"],
-    direction: "M",
-    readTime: "11 мин",
+    title: "Soft Skills: как говорить убедительно",
+    subtitle: "Коммуникация, публичные выступления и переговоры — навыки, которые открывают двери.",
+    hashtags: ["softskills"],
+    readTime: "7 мин",
+    cover: "/softskills_cover.png",
   },
   {
     id: "6",
-    title: "Финансовая подушка: с чего начать",
-    subtitle: "Простая система для тех, кто хочет перестать жить от зарплаты до зарплаты",
-    hashtags: ["финансы"],
-    readTime: "8 мин",
+    title: "Маркетплейсы: с чего начать",
+    subtitle: "Пошаговый разбор: как выйти на Ozon или Wildberries и не слить бюджет в первый месяц.",
+    hashtags: ["hardskills", "финансы"],
+    readTime: "11 мин",
+    cover: "/marketplaces_cover.png",
   },
   {
     id: "7",
-    title: "ChatGPT для работы: 10 реальных кейсов",
-    subtitle: "Как использовать ИИ чтобы делать задачи в 3 раза быстрее",
-    hashtags: ["digital", "hardskills"],
-    readTime: "10 мин",
+    title: "Telegram Ads: продвижение канала",
+    subtitle: "Как настроить рекламу в Telegram и получить первых подписчиков по минимальной цене.",
+    hashtags: ["hardskills", "digital"],
+    readTime: "9 мин",
+    cover: "/tgads_cover.png",
+  },
+  {
+    id: "8",
+    title: "Топ-10 книг сообщества",
+    subtitle: "Подборка книг, которые участники комьюнити советуют друг другу чаще всего.",
+    hashtags: ["библиотека", "саморазвитие"],
+    readTime: "5 мин",
+    cover: "/books_cover.png",
   },
 ];

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mentor Community — шаблон карусели 1:1</title>
+
+  <!-- Шрифты бренда (подобраны бесплатные близкие): Onest + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- Дизайн-система -->
+  <link rel="stylesheet" href="../design-system/tokens.css" />
+  <link rel="stylesheet" href="../design-system/slides.css" />
+</head>
+<body>
+
+  <!-- ===== SVG-символы: знак логотипа + крупное кольцо для фона ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="mc-mark" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="7"/>
+        <circle cx="50"   cy="12" r="10" fill="currentColor"/>
+        <circle cx="82.9" cy="69" r="10" fill="currentColor"/>
+        <circle cx="17.1" cy="69" r="10" fill="currentColor"/>
+      </symbol>
+      <symbol id="mc-ring-lg" viewBox="0 0 200 200">
+        <circle cx="100"   cy="100" r="90" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="100"   cy="10"  r="11" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="177.9" cy="145" r="11" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="22.1"  cy="145" r="11" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="deck">
+
+    <!-- ============ 01 · Обложка ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--c"><svg><use href="#mc-ring-lg"/></svg></span>
+        <span class="glow glow--tr"></span>
+      </div>
+
+      <div class="slide__top">
+        <span class="logo">
+          <span class="logo__mark"><svg><use href="#mc-mark"/></svg></span>
+          <span class="logo__word">mntr<br>comm</span>
+        </span>
+      </div>
+
+      <div class="slide__body slide__body--center items-center t-center">
+        <div class="pill pill--glass mw-30">
+          <p class="display">Название<br>презентации</p>
+        </div>
+        <p class="lead accent mt-3 mw-30">Подзаголовок в одну-две строки, который объясняет суть.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>01</span></div>
+    </section>
+
+    <!-- ============ 02 · Тезис (моно-метка + крупный текст) ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--tr"><svg><use href="#mc-ring-lg"/></svg></span>
+      </div>
+
+      <div class="slide__top">
+        <span class="logo">
+          <span class="logo__mark"><svg><use href="#mc-mark"/></svg></span>
+        </span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <span class="label">Ключевая мысль</span>
+        <p class="display mw-24">Один сильный тезис <span class="accent">на весь слайд</span>.</p>
+        <p class="lead mw-36">Короткое пояснение под заголовком — одна мысль, без длинных абзацев.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>02</span></div>
+    </section>
+
+    <!-- ============ 03 · Картинка + текст ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo">
+          <span class="logo__mark"><svg><use href="#mc-mark"/></svg></span>
+        </span>
+      </div>
+
+      <div class="slide__body gap-5">
+        <div class="figure figure--16x9 figure--ph">Изображение 16:9</div>
+        <div class="slide__body gap-3" style="flex:0">
+          <p><strong>Подзаголовок жирным.</strong> Дальше идёт основной текст в пару строк, который раскрывает мысль и читается крупно.</p>
+          <p class="lead">Второй абзац — вторичный по тону, чуть приглушённый.</p>
+        </div>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>03</span></div>
+    </section>
+
+    <!-- ============ 04 · Нумерованные шаги ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo">
+          <span class="logo__mark"><svg><use href="#mc-mark"/></svg></span>
+        </span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-5">
+        <h1 class="mw-24">Заголовок<br>со списком шагов</h1>
+        <ol class="steps">
+          <li class="step"><span class="step__num">1</span><span class="step__text">Первый шаг — коротко и по делу</span></li>
+          <li class="step"><span class="step__num">2</span><span class="step__text">Второй шаг — одна мысль на пункт</span></li>
+          <li class="step"><span class="step__num">3</span><span class="step__text">Третий шаг — без длинных абзацев</span></li>
+          <li class="step"><span class="step__num">4</span><span class="step__text">Четвёртый шаг</span></li>
+        </ol>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>04</span></div>
+    </section>
+
+    <!-- ============ 05 · Синие пилюли (что внедряем) ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--bl"><svg><use href="#mc-ring-lg"/></svg></span>
+      </div>
+
+      <div class="slide__top">
+        <span class="logo">
+          <span class="logo__mark"><svg><use href="#mc-mark"/></svg></span>
+        </span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1>Чем заменяем?</h1>
+        <div class="pill pill--blue"><p>Тем, что хотим внедрить в жизнь — маленькими шагами</p></div>
+        <div class="pill pill--blue"><p>Очищаем пространство от шума (важно)</p></div>
+        <div class="tags mt-2">
+          <span class="tag">Чтение</span>
+          <span class="tag">Проекты</span>
+          <span class="tag">Природа и солнце</span>
+        </div>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>05</span></div>
+    </section>
+
+    <!-- ============ 06 · Раздел-разделитель ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--c"><svg><use href="#mc-ring-lg"/></svg></span>
+        <span class="glow glow--b"></span>
+      </div>
+
+      <div class="slide__body slide__body--center items-center t-center gap-3">
+        <span class="label">Раздел 02</span>
+        <p class="display mw-24">Заголовок раздела</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>06</span></div>
+    </section>
+
+  </div>
+
+  <!-- Просмотрщик: фит-в-окно + листание (← →, клик, свайп). #grid — лента для экспорта -->
+  <script src="../design-system/present.js" defer></script>
+</body>
+</html>

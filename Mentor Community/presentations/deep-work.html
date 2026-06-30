@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mentor Community — Глубокая работа</title>
+
+  <!-- Шрифты бренда (подобраны бесплатные близкие): Onest + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- Дизайн-система -->
+  <link rel="stylesheet" href="../design-system/tokens.css" />
+  <link rel="stylesheet" href="../design-system/slides.css" />
+</head>
+<body>
+
+  <!-- ===== SVG-символы: знак логотипа + крупное кольцо для фона ===== -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <symbol id="mc-mark" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="38" fill="none" stroke="currentColor" stroke-width="7"/>
+        <circle cx="50"   cy="12" r="10" fill="currentColor"/>
+        <circle cx="82.9" cy="69" r="10" fill="currentColor"/>
+        <circle cx="17.1" cy="69" r="10" fill="currentColor"/>
+      </symbol>
+      <symbol id="mc-ring-lg" viewBox="0 0 200 200">
+        <circle cx="100"   cy="100" r="90" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="100"   cy="10"  r="11" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="177.9" cy="145" r="11" fill="none" stroke="currentColor" stroke-width="1.4"/>
+        <circle cx="22.1"  cy="145" r="11" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <div class="deck">
+
+    <!-- ============ 01 · Обложка ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--c"><svg><use href="#mc-ring-lg"/></svg></span>
+        <span class="glow glow--tr"></span>
+      </div>
+
+      <div class="slide__top">
+        <span class="logo">
+          <span class="logo__mark"><svg><use href="#mc-mark"/></svg></span>
+          <span class="logo__word">mntr<br>comm</span>
+        </span>
+        <span class="label label--muted">Гайд · 10 слайдов</span>
+      </div>
+
+      <div class="slide__body slide__body--center items-center t-center">
+        <div class="pill pill--glass mw-30">
+          <p class="display">Глубокая<br>работа</p>
+        </div>
+        <p class="lead accent mt-3 mw-30">Как держать фокус 4 часа подряд в мире, который борется за твоё внимание.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>01</span></div>
+    </section>
+
+    <!-- ============ 02 · Тезис ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--tr"><svg><use href="#mc-ring-lg"/></svg></span>
+      </div>
+
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <span class="label">Главная мысль</span>
+        <p class="display mw-24">Внимание — твоя <span class="accent">новая валюта</span>.</p>
+        <p class="lead mw-36">И её крадут каждую минуту: уведомления, ленты, открытые вкладки. Кто управляет фокусом — управляет результатом.</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>02</span></div>
+    </section>
+
+    <!-- ============ 03 · Картинка + текст (статистика) ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+      </div>
+
+      <div class="slide__body gap-5">
+        <div class="figure figure--16x9 figure--ph">Каждые 3 минуты</div>
+        <div class="slide__body gap-3" style="flex:0">
+          <p><strong>Мы переключаемся между задачами в среднем каждые 3 минуты.</strong> А чтобы вернуться в фокус после отвлечения, мозгу нужно до 23 минут.</p>
+          <p class="lead">Поэтому «занятость» и «продуктивность» — не одно и то же.</p>
+        </div>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>03</span></div>
+    </section>
+
+    <!-- ============ 04 · Раздел-разделитель ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--c"><svg><use href="#mc-ring-lg"/></svg></span>
+        <span class="glow glow--b"></span>
+      </div>
+
+      <div class="slide__body slide__body--center items-center t-center gap-3">
+        <span class="label">Раздел 01</span>
+        <p class="display mw-24">Почему мы<br>теряем фокус</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>04</span></div>
+    </section>
+
+    <!-- ============ 05 · Нумерованные шаги (причины) ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-5">
+        <h1 class="mw-24">4 вора<br>внимания</h1>
+        <ol class="steps">
+          <li class="step"><span class="step__num">1</span><span class="step__text">Уведомления — каждый «дзинь» сбрасывает контекст</span></li>
+          <li class="step"><span class="step__num">2</span><span class="step__text">Мультизадачность — иллюзия скорости, реальная потеря качества</span></li>
+          <li class="step"><span class="step__num">3</span><span class="step__text">Бесконечные ленты — дешёвый дофамин без насыщения</span></li>
+          <li class="step"><span class="step__num">4</span><span class="step__text">Нет границ — работа и отдых перемешаны в одну кашу</span></li>
+        </ol>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>05</span></div>
+    </section>
+
+    <!-- ============ 06 · Синие пилюли (чем заменяем) ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--bl"><svg><use href="#mc-ring-lg"/></svg></span>
+      </div>
+
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-3">
+        <h1>Чем заменяем хаос</h1>
+        <div class="pill pill--blue"><p>Один блок глубокой работы вместо десяти прерванных часов</p></div>
+        <div class="pill pill--blue"><p>Тишина и один экран вместо двадцати вкладок</p></div>
+        <div class="tags mt-2">
+          <span class="tag">Фокус</span>
+          <span class="tag">Тишина</span>
+          <span class="tag">Один экран</span>
+        </div>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>06</span></div>
+    </section>
+
+    <!-- ============ 07 · Раздел-разделитель ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--tr"><svg><use href="#mc-ring-lg"/></svg></span>
+        <span class="glow glow--tr"></span>
+      </div>
+
+      <div class="slide__body slide__body--center items-center t-center gap-3">
+        <span class="label">Раздел 02</span>
+        <p class="display mw-24">Система<br>глубокой работы</p>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>07</span></div>
+    </section>
+
+    <!-- ============ 08 · Нумерованные шаги (метод) ============ -->
+    <section class="slide">
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-5">
+        <h1 class="mw-24">Четыре шага<br>к фокусу</h1>
+        <ol class="steps">
+          <li class="step"><span class="step__num">1</span><span class="step__text">Блок 90 минут в календаре — как встреча с собой</span></li>
+          <li class="step"><span class="step__num">2</span><span class="step__text">Телефон в другую комнату, вкладки закрыты</span></li>
+          <li class="step"><span class="step__num">3</span><span class="step__text">Одна задача на блок — и только она</span></li>
+          <li class="step"><span class="step__num">4</span><span class="step__text">После — пауза без экрана: вода, прогулка, дыхание</span></li>
+        </ol>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>08</span></div>
+    </section>
+
+    <!-- ============ 09 · Выноска / правило ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--bl"><svg><use href="#mc-ring-lg"/></svg></span>
+      </div>
+
+      <div class="slide__top">
+        <span class="logo"><span class="logo__mark"><svg><use href="#mc-mark"/></svg></span></span>
+      </div>
+
+      <div class="slide__body slide__body--center gap-5">
+        <span class="label">Правило одного процента</span>
+        <p class="display mw-24">Глубину тренируют, как мышцу.</p>
+        <div class="callout">
+          <span class="callout__icon">!</span>
+          <p>Начни с одного часа в день. Через месяц это станет твоим преимуществом, которое не купить.</p>
+        </div>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>09</span></div>
+    </section>
+
+    <!-- ============ 10 · Финал / призыв ============ -->
+    <section class="slide">
+      <div class="slide__decor">
+        <span class="ring-bg ring-bg--c"><svg><use href="#mc-ring-lg"/></svg></span>
+        <span class="glow glow--b"></span>
+      </div>
+
+      <div class="slide__top">
+        <span class="logo">
+          <span class="logo__mark"><svg><use href="#mc-mark"/></svg></span>
+          <span class="logo__word">mntr<br>comm</span>
+        </span>
+      </div>
+
+      <div class="slide__body slide__body--center items-center t-center gap-3">
+        <span class="label">Твой ход</span>
+        <p class="display mw-24">Поставь <span class="accent">первый блок</span> на завтра.</p>
+        <p class="lead mw-36">Сохрани карусель и возвращайся к шагам. Делись с тем, кому фокус нужен не меньше.</p>
+        <div class="tags mt-2">
+          <span class="tag">Сохранить</span>
+          <span class="tag">Поделиться</span>
+        </div>
+      </div>
+
+      <div class="slide__foot"><span>mentor-community</span><span>10</span></div>
+    </section>
+
+  </div>
+
+  <!-- Просмотрщик: фит-в-окно + листание (← →, клик, свайп). #grid — лента для экспорта -->
+  <script src="../design-system/present.js" defer></script>
+</body>
+</html>
