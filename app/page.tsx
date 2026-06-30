@@ -2,16 +2,37 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
-import { materials, collections, currentMonth, HASHTAG_META, Hashtag } from "@/lib/content";
+import { materials as staticMaterials, collections, currentMonth, HASHTAG_META, Hashtag, Material } from "@/lib/content";
+import type { Post } from "@/lib/supabase";
 import { SprintCard } from "@/components/SprintCard";
 import { MaterialCard } from "@/components/MaterialCard";
 import { FilterDrawer } from "@/components/FilterDrawer";
 import { Logo } from "@/components/Logo";
 import { ArticleDrawer } from "@/components/ArticleDrawer";
-import type { Material } from "@/lib/content";
-
 type Tab = "home" | "materials" | "checkin" | "progress";
 interface FilterState { hashtags: Hashtag[]; sort: "new" | "old"; }
+
+function postToMaterial(post: Post): Material {
+  const content = post.text || post.caption || "";
+  const titleMatch = content.match(/^(.+?)[\n\r]/);
+  const title = titleMatch ? titleMatch[1].replace(/[*_#]/g, "").trim() : content.slice(0, 60).trim();
+  const rest = titleMatch ? content.slice(titleMatch[0].length).trim() : "";
+  const subtitleMatch = rest.match(/^(.{10,120})/);
+  const subtitle = subtitleMatch ? subtitleMatch[1].replace(/[*_#]/g, "").trim() : "";
+
+  const validHashtags = post.hashtags.filter((h) => h.replace("#", "") in HASHTAG_META);
+  const hashtags = validHashtags.map((h) => h.replace("#", "") as Hashtag);
+
+  return {
+    id: String(post.id),
+    title: title || "Пост из канала",
+    subtitle,
+    hashtags: hashtags.length > 0 ? hashtags : [],
+    readTime: `${Math.max(1, Math.ceil(content.length / 1200))} мин`,
+    cover: post.photo_url || undefined,
+    body: content,
+  };
+}
 
 export default function Home() {
   const [tab, setTab] = useState<Tab>("home");
@@ -24,21 +45,28 @@ export default function Home() {
   const [mood, setMood] = useState<number | null>(null);
   const [checkinText, setCheckinText] = useState("");
   const [openArticle, setOpenArticle] = useState<Material | null>(null);
+  const [realPosts, setRealPosts] = useState<Material[] | null>(null);
 
   useEffect(() => {
     const tg = (window as any).Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
-    const initData = tg?.initData || "";
-    // Get user info from Telegram and allow access
     const tgUser = tg?.initDataUnsafe?.user;
-    if (tgUser) {
-      setUser({ first_name: tgUser.first_name });
-    } else {
-      setUser({ first_name: "Участник" });
-    }
+    setUser({ first_name: tgUser?.first_name || "Участник" });
     setIsMember(true);
     setLoading(false);
+
+    // Load real posts from Supabase
+    fetch("/api/posts")
+      .then((r) => r.json())
+      .then(({ posts }) => {
+        if (posts && posts.length > 0) {
+          setRealPosts(posts.map(postToMaterial));
+        }
+      })
+      .catch(() => {});
   }, []);
+
+  const materials = realPosts ?? staticMaterials;
 
   const filteredMaterials = useMemo(() => {
     let list = [...materials];
@@ -46,7 +74,7 @@ export default function Home() {
     if (filter.hashtags.length > 0) list = list.filter((m) => m.hashtags.some((t) => filter.hashtags.includes(t)));
     if (filter.sort === "old") list = list.reverse();
     return list;
-  }, [search, filter]);
+  }, [search, filter, materials]);
 
   const activeFilterCount = filter.hashtags.length + (filter.sort === "old" ? 1 : 0);
 
