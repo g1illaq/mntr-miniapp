@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkChannelMembership } from "@/lib/telegram";
 
+// Owner IDs who always get access
+const OWNER_IDS = [172575833];
+
 export async function POST(req: NextRequest) {
   const { initData } = await req.json();
 
@@ -8,14 +11,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "No initData" }, { status: 400 });
   }
 
-  // Parse user from initData without strict verification for now
   let user: { id: number; first_name: string; username?: string } | null = null;
   try {
     const params = new URLSearchParams(initData);
     const userStr = params.get("user");
-    if (userStr) {
-      user = JSON.parse(userStr);
-    }
+    if (userStr) user = JSON.parse(userStr);
   } catch {
     return NextResponse.json({ error: "Failed to parse initData" }, { status: 400 });
   }
@@ -24,7 +24,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "No user in initData" }, { status: 400 });
   }
 
-  const isMember = await checkChannelMembership(user.id);
+  // Owners always have access
+  if (OWNER_IDS.includes(user.id)) {
+    return NextResponse.json({ user, isMember: true });
+  }
 
+  const isMember = await checkChannelMembership(user.id);
   return NextResponse.json({ user, isMember });
 }
