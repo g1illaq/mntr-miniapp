@@ -7,6 +7,8 @@ import { SprintCard } from "@/components/SprintCard";
 import { MaterialCard } from "@/components/MaterialCard";
 import { FilterDrawer } from "@/components/FilterDrawer";
 import { Logo } from "@/components/Logo";
+import { ArticleDrawer } from "@/components/ArticleDrawer";
+import type { Material } from "@/lib/content";
 
 type Tab = "home" | "materials" | "checkin" | "progress";
 interface FilterState { hashtags: Hashtag[]; sort: "new" | "old"; }
@@ -21,6 +23,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [mood, setMood] = useState<number | null>(null);
   const [checkinText, setCheckinText] = useState("");
+  const [openArticle, setOpenArticle] = useState<Material | null>(null);
 
   useEffect(() => {
     const tg = (window as any).Telegram?.WebApp;
@@ -184,7 +187,7 @@ export default function Home() {
                 Новые материалы
               </p>
               <div className="px-4 space-y-3">
-                {materials.slice(0, 3).map((m) => <MaterialCard key={m.id} material={m} />)}
+                {materials.slice(0, 3).map((m) => <MaterialCard key={m.id} material={m} onRead={() => setOpenArticle(m)} />)}
                 <button onClick={() => setTab("materials")} className="w-full py-3 rounded-xl text-sm font-semibold"
                   style={{ backgroundColor: "var(--mc-ink-2)", color: "var(--mc-text-muted)", border: "1px solid var(--mc-ink-border)" }}>
                   Все материалы →
@@ -224,7 +227,7 @@ export default function Home() {
             </div>
             {filteredMaterials.length === 0
               ? <div className="text-center py-16"><p className="text-4xl mb-3">🔍</p><p className="text-sm" style={{ color: "var(--mc-text-muted)" }}>Ничего не найдено</p></div>
-              : filteredMaterials.map((m) => <MaterialCard key={m.id} material={m} />)
+              : filteredMaterials.map((m) => <MaterialCard key={m.id} material={m} onRead={() => setOpenArticle(m)} />)
             }
           </div>
         )}
@@ -323,6 +326,7 @@ export default function Home() {
       </nav>
 
       <FilterDrawer open={filterOpen} onClose={() => setFilterOpen(false)} value={filter} onChange={setFilter} />
+      <ArticleDrawer material={openArticle} onClose={() => setOpenArticle(null)} />
     </div>
   );
 }

@@ -1,19 +1,20 @@
 "use client";
 import { useState } from "react";
-import Image from "next/image";
 import { Material, HASHTAG_META } from "@/lib/content";
 
-export function MaterialCard({ material }: { material: Material }) {
+export function MaterialCard({ material, onRead }: { material: Material; onRead?: () => void }) {
   const [saved, setSaved] = useState(false);
 
   return (
     <div
       className="rounded-2xl overflow-hidden cursor-pointer active:opacity-70 transition-opacity"
       style={{ backgroundColor: "var(--mc-ink-3)", border: "1px solid var(--mc-ink-border)" }}
+      onClick={onRead}
     >
       {material.cover && (
         <div className="relative w-full h-36">
-          <Image src={material.cover} alt={material.title} fill className="object-cover" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={material.cover} alt={material.title} className="w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, var(--mc-ink-3))" }} />
         </div>
       )}
