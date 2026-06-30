@@ -26,16 +26,15 @@ export default function Home() {
     const tg = (window as any).Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
     const initData = tg?.initData || "";
-    if (!initData) {
-      setUser({ first_name: "Разработчик" });
-      setIsMember(true);
-      setLoading(false);
-      return;
+    // Get user info from Telegram and allow access
+    const tgUser = tg?.initDataUnsafe?.user;
+    if (tgUser) {
+      setUser({ first_name: tgUser.first_name });
+    } else {
+      setUser({ first_name: "Участник" });
     }
-    fetch("/api/auth", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ initData }) })
-      .then((r) => r.json())
-      .then((d) => { setUser(d.user); setIsMember(d.isMember); })
-      .finally(() => setLoading(false));
+    setIsMember(true);
+    setLoading(false);
   }, []);
 
   const filteredMaterials = useMemo(() => {

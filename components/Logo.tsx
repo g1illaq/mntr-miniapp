@@ -1,14 +1,12 @@
-import Image from "next/image";
-
 export function Logo({ size = 28 }: { size?: number }) {
   return (
-    <Image
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
       src="/logo.png"
       alt="mntr comm"
       width={size}
       height={size}
-      className="rounded-lg"
-      priority
+      style={{ borderRadius: 8, objectFit: "contain" }}
     />
   );
 }
