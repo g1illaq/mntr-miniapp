@@ -53,28 +53,63 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const msg = body.message;
+    if (!msg) return NextResponse.json({ ok: true });
+
+    // ── Личное сообщение боту: пересланный урок для импорта ──────────────
+    // Открой @mntrcomm_bot и перешли туда старые уроки из комментариев
+    if (msg.chat?.type === "private" && msg.from?.id === OWNER_ID) {
+      const text = msg.text || msg.caption || "";
+      if (!text.trim()) return NextResponse.json({ ok: true });
+
+      const hashtags = extractHashtags(text);
+      const firstLine = text.split("\n")[0].replace(/[*_#]/g, "").trim();
+
+      await supabase.from("posts").upsert(
+        {
+          message_id: msg.forward_from_message_id || msg.message_id + 1_000_000,
+          caption: firstLine || "Материал из канала",
+          body: text,
+          photo_url: null,
+          hashtags,
+          published_at: new Date((msg.forward_date || msg.date) * 1000).toISOString(),
+        },
+        { onConflict: "message_id" }
+      );
+
+      // Подтверждение боту
+      await fetch(
+        `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: OWNER_ID,
+            text: `✅ Урок сохранён: «${firstLine.slice(0, 50)}»`,
+          }),
+        }
+      );
+
+      return NextResponse.json({ ok: true });
+    }
+
     // ── Комментарий от владельца в группе обсуждений ─────────────────────
     // Захватываем ТОЛЬКО твои ответы на сам пост канала (не ответы участникам)
-    const msg = body.message;
     if (
-      msg &&
       msg.chat?.id === DISCUSSION_GROUP_ID &&
       msg.from?.id === OWNER_ID
     ) {
       const commentText = msg.text || msg.caption || "";
       if (!commentText.trim()) return NextResponse.json({ ok: true });
 
-      // Найти ID оригинального поста в канале через reply_to_message
       const replyTo = msg.reply_to_message;
       const channelPostId =
         replyTo?.forward_from_message_id ||
         replyTo?.reply_to_message?.forward_from_message_id ||
         null;
 
-      // Если это НЕ ответ на пост канала — игнорируем (обычный ответ участнику)
       if (!channelPostId) return NextResponse.json({ ok: true });
 
-      // Обновить существующий пост — добавить тело урока
       const { data: existing } = await supabase
         .from("posts")
         .select("body, hashtags")
@@ -85,7 +120,6 @@ export async function POST(req: NextRequest) {
         ? existing.body + "\n\n" + commentText
         : commentText;
 
-      // Если в комментарии есть хэштеги — добавить к существующим
       const newTags = extractHashtags(commentText);
       const mergedTags = Array.from(
         new Set([...(existing?.hashtags || []), ...newTags])
