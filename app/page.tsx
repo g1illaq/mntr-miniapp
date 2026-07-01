@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
-import { materials as staticMaterials, collections, currentMonth, HASHTAG_META, Hashtag, Material } from "@/lib/content";
+import { collections, currentMonth, HASHTAG_META, Hashtag, Material } from "@/lib/content";
 import type { Post } from "@/lib/supabase";
 import { SprintCard } from "@/components/SprintCard";
 import { MaterialCard } from "@/components/MaterialCard";
@@ -51,7 +51,8 @@ export default function Home() {
   const [mood, setMood] = useState<number | null>(null);
   const [checkinText, setCheckinText] = useState("");
   const [openArticle, setOpenArticle] = useState<Material | null>(null);
-  const [realPosts, setRealPosts] = useState<Material[] | null>(null);
+  const [realPosts, setRealPosts] = useState<Material[]>([]);
+  const [postsLoaded, setPostsLoaded] = useState(false);
 
   useEffect(() => {
     const tg = (window as any).Telegram?.WebApp;
@@ -65,14 +66,13 @@ export default function Home() {
     fetch("/api/posts")
       .then((r) => r.json())
       .then(({ posts }) => {
-        if (posts && posts.length > 0) {
-          setRealPosts(posts.map(postToMaterial));
-        }
+        setRealPosts((posts || []).map(postToMaterial));
+        setPostsLoaded(true);
       })
-      .catch(() => {});
+      .catch(() => { setPostsLoaded(true); });
   }, []);
 
-  const materials = realPosts ?? staticMaterials;
+  const materials = realPosts;
 
   const filteredMaterials = useMemo(() => {
     let list = [...materials];
@@ -221,7 +221,12 @@ export default function Home() {
                 Новые материалы
               </p>
               <div className="px-4 space-y-3">
-                {materials.slice(0, 3).map((m) => <MaterialCard key={m.id} material={m} onRead={() => setOpenArticle(m)} />)}
+                {!postsLoaded
+                  ? <div className="text-center py-8"><div className="w-5 h-5 rounded-full border-2 border-white/10 border-t-white animate-spin mx-auto" /></div>
+                  : materials.length === 0
+                    ? <div className="text-center py-8"><p className="text-sm" style={{ color: "var(--mc-text-muted)" }}>Материалы скоро появятся</p></div>
+                    : materials.slice(0, 3).map((m) => <MaterialCard key={m.id} material={m} onRead={() => setOpenArticle(m)} />)
+                }
                 <button onClick={() => setTab("materials")} className="w-full py-3 rounded-xl text-sm font-semibold"
                   style={{ backgroundColor: "var(--mc-ink-2)", color: "var(--mc-text-muted)", border: "1px solid var(--mc-ink-border)" }}>
                   Все материалы →
@@ -259,9 +264,16 @@ export default function Home() {
                 );
               })}
             </div>
-            {filteredMaterials.length === 0
-              ? <div className="text-center py-16"><p className="text-4xl mb-3">🔍</p><p className="text-sm" style={{ color: "var(--mc-text-muted)" }}>Ничего не найдено</p></div>
-              : filteredMaterials.map((m) => <MaterialCard key={m.id} material={m} onRead={() => setOpenArticle(m)} />)
+            {!postsLoaded
+              ? <div className="flex justify-center py-16"><div className="w-6 h-6 rounded-full border-2 border-white/10 border-t-white animate-spin" /></div>
+              : filteredMaterials.length === 0
+                ? <div className="text-center py-16">
+                    <p className="text-4xl mb-3">{search || filter.hashtags.length > 0 ? "🔍" : "📭"}</p>
+                    <p className="text-sm" style={{ color: "var(--mc-text-muted)" }}>
+                      {search || filter.hashtags.length > 0 ? "Ничего не найдено" : "Материалы скоро появятся"}
+                    </p>
+                  </div>
+                : filteredMaterials.map((m) => <MaterialCard key={m.id} material={m} onRead={() => setOpenArticle(m)} />)
             }
           </div>
         )}
