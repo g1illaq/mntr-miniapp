@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
     }
 
     // ── Комментарий от владельца в группе обсуждений ─────────────────────
+    // Захватываем ТОЛЬКО твои ответы на сам пост канала (не ответы участникам)
     const msg = body.message;
     if (
       msg &&
@@ -63,49 +64,37 @@ export async function POST(req: NextRequest) {
       const commentText = msg.text || msg.caption || "";
       if (!commentText.trim()) return NextResponse.json({ ok: true });
 
-      // Найти ID оригинального поста в канале
+      // Найти ID оригинального поста в канале через reply_to_message
       const replyTo = msg.reply_to_message;
       const channelPostId =
         replyTo?.forward_from_message_id ||
         replyTo?.reply_to_message?.forward_from_message_id ||
         null;
 
-      if (channelPostId) {
-        // Обновить существующий пост — добавить тело урока
-        const { data: existing } = await supabase
-          .from("posts")
-          .select("body, hashtags")
-          .eq("message_id", channelPostId)
-          .single();
+      // Если это НЕ ответ на пост канала — игнорируем (обычный ответ участнику)
+      if (!channelPostId) return NextResponse.json({ ok: true });
 
-        const newBody = existing?.body
-          ? existing.body + "\n\n" + commentText
-          : commentText;
+      // Обновить существующий пост — добавить тело урока
+      const { data: existing } = await supabase
+        .from("posts")
+        .select("body, hashtags")
+        .eq("message_id", channelPostId)
+        .single();
 
-        // Если в комментарии есть хэштеги — добавить к существующим
-        const newTags = extractHashtags(commentText);
-        const mergedTags = Array.from(
-          new Set([...(existing?.hashtags || []), ...newTags])
-        );
+      const newBody = existing?.body
+        ? existing.body + "\n\n" + commentText
+        : commentText;
 
-        await supabase
-          .from("posts")
-          .update({ body: newBody, hashtags: mergedTags })
-          .eq("message_id", channelPostId);
-      } else {
-        // Комментарий не привязан к конкретному посту — сохранить как отдельный материал
-        const hashtags = extractHashtags(commentText);
-        await supabase.from("posts").upsert(
-          {
-            message_id: msg.message_id * -1, // отрицательный ID чтобы не конфликтовал
-            caption: commentText.split("\n")[0].slice(0, 100),
-            body: commentText,
-            hashtags,
-            published_at: new Date(msg.date * 1000).toISOString(),
-          },
-          { onConflict: "message_id" }
-        );
-      }
+      // Если в комментарии есть хэштеги — добавить к существующим
+      const newTags = extractHashtags(commentText);
+      const mergedTags = Array.from(
+        new Set([...(existing?.hashtags || []), ...newTags])
+      );
+
+      await supabase
+        .from("posts")
+        .update({ body: newBody, hashtags: mergedTags })
+        .eq("message_id", channelPostId);
     }
 
     return NextResponse.json({ ok: true });
