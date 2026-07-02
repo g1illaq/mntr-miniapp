@@ -26,10 +26,8 @@ function postToMaterial(post: Post): Material {
     .map((h) => h.replace("#", ""))
     .filter((h) => h in HASHTAG_META) as Hashtag[];
 
-  // Обложка: фото из поста → картинка по хэштегу → ничего
-  const cover = post.photo_url ||
-    (validHashtags.length > 0 ? HASHTAG_COVERS[validHashtags[0]] : undefined) ||
-    undefined;
+  // Обложка только из реального фото поста; без фото — заглушка в карточке
+  const cover = post.photo_url || undefined;
 
   // Ссылка на пост в приватном канале (реальные message_id < 1_000_000; синтетические ≥ 1_000_000)
   const tgLink = post.message_id > 0 && post.message_id < 1_000_000
