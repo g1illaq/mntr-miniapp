@@ -10,12 +10,29 @@ function extractHashtags(text: string): string[] {
   return matches.map((t) => t.toLowerCase());
 }
 
-async function downloadPhoto(fileId: string): Promise<string | null> {
+async function uploadPhoto(fileId: string, messageId: number): Promise<string | null> {
   try {
+    // Получить временный URL от Telegram
     const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/getFile?file_id=${fileId}`);
     const data = await res.json();
     if (!data.ok) return null;
-    return `https://api.telegram.org/file/bot${BOT_TOKEN}/${data.result.file_path}`;
+    const tgUrl = `https://api.telegram.org/file/bot${BOT_TOKEN}/${data.result.file_path}`;
+
+    // Скачать фото
+    const imgRes = await fetch(tgUrl);
+    if (!imgRes.ok) return null;
+    const buffer = await imgRes.arrayBuffer();
+
+    // Загрузить в Supabase Storage
+    const supabase = getServiceClient();
+    await supabase.storage.createBucket("covers", { public: true }).catch(() => {});
+    const fileName = `${messageId}.jpg`;
+    await supabase.storage.from("covers").upload(fileName, buffer, {
+      contentType: "image/jpeg",
+      upsert: true,
+    });
+    const { data: { publicUrl } } = supabase.storage.from("covers").getPublicUrl(fileName);
+    return publicUrl;
   } catch {
     return null;
   }
@@ -37,7 +54,7 @@ export async function POST(req: NextRequest) {
       let photoUrl: string | null = null;
       if (channelPost.photo?.length > 0) {
         const largest = channelPost.photo[channelPost.photo.length - 1];
-        photoUrl = await downloadPhoto(largest.file_id);
+        photoUrl = await uploadPhoto(largest.file_id, channelPost.message_id);
       }
 
       await supabase.from("posts").upsert(

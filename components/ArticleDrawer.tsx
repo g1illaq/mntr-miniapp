@@ -15,14 +15,25 @@ function renderBody(text: string) {
   return text.split("\n").map((line, i) => {
     if (/^https?:\/\//.test(line.trim())) return null;
     if (line.startsWith("## ")) {
-      return <h2 key={i} className="text-lg font-bold mt-6 mb-2" style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>{line.slice(3)}</h2>;
+      return (
+        <h2 key={i} className="text-lg font-bold mt-6 mb-2"
+          style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>
+          {line.slice(3)}
+        </h2>
+      );
     }
     if (line.trim() === "") return <div key={i} className="h-2" />;
     const parts = line.split(/\*\*(.*?)\*\*/g);
     const rendered = parts.map((part, j) =>
-      j % 2 === 1 ? <strong key={j} style={{ color: "var(--mc-text)" }}>{part}</strong> : part
+      j % 2 === 1
+        ? <strong key={j} style={{ color: "var(--mc-text)" }}>{part}</strong>
+        : part
     );
-    return <p key={i} className="text-sm leading-relaxed mb-1" style={{ color: "var(--mc-text-muted)" }}>{rendered}</p>;
+    return (
+      <p key={i} className="text-sm leading-relaxed mb-1" style={{ color: "var(--mc-text-muted)" }}>
+        {rendered}
+      </p>
+    );
   });
 }
 
@@ -33,13 +44,16 @@ export function ArticleDrawer({ material, onClose }: { material: Material | null
   return (
     <div className="fixed inset-0 z-50 flex flex-col justify-end">
       <div className="absolute inset-0 bg-black/70" onClick={onClose} />
-      <div className="relative flex flex-col rounded-t-3xl max-h-[92vh]"
-        style={{ backgroundColor: "var(--mc-ink-2)", border: "1px solid var(--mc-ink-border)" }}>
-
+      <div
+        className="relative flex flex-col rounded-t-3xl max-h-[92vh]"
+        style={{ backgroundColor: "var(--mc-ink-2)", border: "1px solid var(--mc-ink-border)" }}
+      >
+        {/* Drag handle */}
         <div className="flex justify-center pt-3 pb-1 shrink-0">
           <div className="w-10 h-1 rounded-full" style={{ backgroundColor: "var(--mc-ink-border)" }} />
         </div>
 
+        {/* Header */}
         <div className="px-5 pb-3 flex items-start justify-between gap-3 shrink-0">
           <div className="flex-1">
             <div className="flex flex-wrap gap-1.5 mb-2">
@@ -50,10 +64,10 @@ export function ArticleDrawer({ material, onClose }: { material: Material | null
                 </span>
               ))}
             </div>
-            <h1 className="text-xl font-black leading-snug" style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>
+            <h1 className="text-xl font-black leading-snug"
+              style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>
               {material.title}
             </h1>
-            <p className="label-mono mt-1">{material.readTime} чтения</p>
           </div>
           <button onClick={onClose} className="mt-1 shrink-0" style={{ color: "var(--mc-text-faint)" }}>
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -65,21 +79,24 @@ export function ArticleDrawer({ material, onClose }: { material: Material | null
         <div className="h-px shrink-0" style={{ backgroundColor: "var(--mc-ink-border)" }} />
 
         <div className="overflow-y-auto flex-1 px-5 py-4 scrollbar-hide">
+          {/* Cover image */}
           {material.cover && (
-            <div className="w-full h-44 rounded-2xl overflow-hidden mb-5">
+            <div className="w-full rounded-2xl overflow-hidden mb-5" style={{ height: 220 }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={material.cover} alt={material.title} className="w-full h-full object-cover" />
             </div>
           )}
 
+          {/* Body text */}
           {material.body ? renderBody(material.body) : (
             <p className="text-sm" style={{ color: "var(--mc-text-muted)" }}>{material.subtitle}</p>
           )}
 
-          {/* Ссылки на видео / PDF из текста урока */}
+          {/* Links from lesson body */}
           {links.length > 0 && (
             <div className="mt-6 space-y-2">
-              <p className="text-xs mb-3" style={{ color: "var(--mc-text-faint)", fontFamily: "var(--mc-font-mono)" }}>
+              <p className="text-xs mb-3"
+                style={{ color: "var(--mc-text-faint)", fontFamily: "var(--mc-font-mono)" }}>
                 МАТЕРИАЛЫ УРОКА
               </p>
               {links.map(({ url, label }, i) => (
@@ -92,12 +109,19 @@ export function ArticleDrawer({ material, onClose }: { material: Material | null
             </div>
           )}
 
-          {/* Кнопка открыть пост в канале */}
+          {/* Main CTA → Telegram post (video lessons in comments) */}
           {material.tgLink && (
-            <a href={material.tgLink} target="_blank" rel="noreferrer"
-              className="flex items-center justify-center gap-2 w-full mt-5 py-3.5 rounded-xl text-sm font-semibold"
-              style={{ backgroundColor: "var(--mc-ink-3)", color: "var(--mc-text-muted)", border: "1px solid var(--mc-ink-border)" }}>
-              ✈️ Открыть пост в канале
+            <a
+              href={material.tgLink}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center justify-center gap-2 w-full mt-6 py-3.5 rounded-xl text-sm font-semibold"
+              style={{
+                background: "linear-gradient(90deg, var(--mc-primary-dark), var(--mc-primary))",
+                color: "#fff",
+              }}
+            >
+              Смотреть уроки в Telegram →
             </a>
           )}
 

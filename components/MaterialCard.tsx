@@ -1,57 +1,93 @@
 "use client";
-import { useState } from "react";
 import { Material, HASHTAG_META } from "@/lib/content";
 
 export function MaterialCard({ material, onRead }: { material: Material; onRead?: () => void }) {
-  const [saved, setSaved] = useState(false);
-
   return (
     <div
-      className="rounded-2xl overflow-hidden cursor-pointer active:opacity-70 transition-opacity"
+      className="rounded-2xl overflow-hidden active:opacity-80 transition-opacity"
       style={{ backgroundColor: "var(--mc-ink-3)", border: "1px solid var(--mc-ink-border)" }}
-      onClick={onRead}
     >
-      {material.cover && (
-        <div className="relative w-full h-36">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={material.cover} alt={material.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, var(--mc-ink-3))" }} />
-        </div>
-      )}
+      {/* Cover image */}
+      <div
+        className="relative w-full cursor-pointer"
+        style={{ height: material.cover ? 220 : 80 }}
+        onClick={onRead}
+      >
+        {material.cover ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={material.cover}
+            alt={material.title}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div
+            className="w-full h-full flex items-center justify-center"
+            style={{ backgroundColor: "var(--mc-ink-2)" }}
+          >
+            <span style={{ fontSize: 36, opacity: 0.3 }}>📚</span>
+          </div>
+        )}
+      </div>
 
-      <div className="p-4 space-y-3">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex flex-wrap gap-1.5 flex-1">
+      <div className="p-4 space-y-2.5">
+        {/* Hashtag chips */}
+        {material.hashtags.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
             {material.hashtags.map((tag) => {
               const meta = HASHTAG_META[tag];
               return (
-                <span key={tag} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
-                  style={{ backgroundColor: "rgba(45,107,246,0.15)", color: "var(--mc-primary-bright)", border: "1px solid rgba(45,107,246,0.25)" }}>
+                <span
+                  key={tag}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
+                  style={{
+                    backgroundColor: "rgba(45,107,246,0.15)",
+                    color: "var(--mc-primary-bright)",
+                    border: "1px solid rgba(45,107,246,0.25)",
+                  }}
+                >
                   {meta.emoji} {meta.label}
                 </span>
               );
             })}
           </div>
-          <button onClick={(e) => { e.stopPropagation(); setSaved(!saved); }}
-            className="shrink-0 mt-0.5 transition-colors"
-            style={{ color: saved ? "var(--mc-primary)" : "var(--mc-text-faint)" }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill={saved ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
-              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
-            </svg>
-          </button>
-        </div>
+        )}
 
-        <div>
-          <p className="font-bold text-base leading-snug" style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>
-            {material.title}
+        {/* Title */}
+        <p
+          className="font-bold text-base leading-snug cursor-pointer"
+          style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}
+          onClick={onRead}
+        >
+          {material.title}
+        </p>
+
+        {/* Description from post */}
+        {material.subtitle && (
+          <p
+            className="text-sm leading-relaxed cursor-pointer"
+            style={{ color: "var(--mc-text-muted)" }}
+            onClick={onRead}
+          >
+            {material.subtitle}
           </p>
-          <p className="text-sm mt-1 leading-relaxed" style={{ color: "var(--mc-text-muted)" }}>{material.subtitle}</p>
-        </div>
+        )}
 
-        <div className="flex items-center justify-between pt-1">
-          <span className="label-mono">{material.readTime}</span>
-          <span className="text-xs font-semibold" style={{ color: "var(--mc-primary-bright)" }}>Читать →</span>
-        </div>
+        {/* CTA button → Telegram post (comments with video lessons) */}
+        {material.tgLink && (
+          <a
+            href={material.tgLink}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold mt-1"
+            style={{
+              background: "linear-gradient(90deg, var(--mc-primary-dark), var(--mc-primary))",
+              color: "#fff",
+            }}
+          >
+            Смотреть уроки →
+          </a>
+        )}
       </div>
     </div>
   );
