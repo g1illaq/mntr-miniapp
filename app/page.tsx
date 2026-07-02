@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
-import { collections, currentMonth, HASHTAG_META, Hashtag, Material } from "@/lib/content";
+import { collections, currentMonth, HASHTAG_META, HASHTAG_COVERS, Hashtag, Material } from "@/lib/content";
 import type { Post } from "@/lib/supabase";
 import { SprintCard } from "@/components/SprintCard";
 import { MaterialCard } from "@/components/MaterialCard";
@@ -16,27 +16,35 @@ function postToMaterial(post: Post): Material {
   const caption = post.caption || "";
   const body = post.body || "";
 
-  // Первая строка caption = заголовок
-  const titleLine = caption.split("\n")[0].replace(/[*_]/g, "").trim();
+  const titleLine = caption.split("\n")[0].replace(/[→➡️*_]/g, "").trim();
   const title = titleLine || "Материал из канала";
 
-  // Вторая строка caption или начало body = подзаголовок
-  const captionRest = caption.split("\n").slice(1).join(" ").replace(/[*_#]/g, "").trim();
-  const subtitle = (captionRest || body.slice(0, 120).replace(/[*_#\n]/g, " ")).trim();
+  const captionLines = caption.split("\n").slice(1).join(" ").replace(/[*_#→➡️]/g, "").trim();
+  const subtitle = (captionLines || body.split("\n")[0].replace(/[*_#→➡️]/g, "")).trim().slice(0, 120);
 
-  const validHashtags = post.hashtags.filter((h) => h.replace("#", "") in HASHTAG_META);
-  const hashtags = validHashtags.map((h) => h.replace("#", "") as Hashtag);
+  const validHashtags = post.hashtags
+    .map((h) => h.replace("#", ""))
+    .filter((h) => h in HASHTAG_META) as Hashtag[];
 
-  const bodyLength = body.length || caption.length;
+  // Обложка: фото из поста → картинка по хэштегу → ничего
+  const cover = post.photo_url ||
+    (validHashtags.length > 0 ? HASHTAG_COVERS[validHashtags[0]] : undefined) ||
+    undefined;
+
+  // Ссылка на пост в канале (только для реальных message_id)
+  const tgLink = post.message_id > 0 && post.message_id < 10_000_000
+    ? `https://t.me/mntrcomm/${post.message_id}`
+    : undefined;
 
   return {
     id: String(post.id),
     title,
     subtitle,
-    hashtags,
-    readTime: `${Math.max(1, Math.ceil(bodyLength / 1000))} мин`,
-    cover: post.photo_url || undefined,
+    hashtags: validHashtags,
+    readTime: `${Math.max(1, Math.ceil((body.length || caption.length) / 1000))} мин`,
+    cover,
     body: body || caption,
+    tgLink,
   };
 }
 

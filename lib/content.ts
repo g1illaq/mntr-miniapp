@@ -13,8 +13,18 @@ export interface Material {
   hashtags: Hashtag[];
   readTime: string;
   cover?: string;
-  body?: string; // markdown-like content
+  body?: string;
+  tgLink?: string; // ссылка на пост в канале
 }
+
+export const HASHTAG_COVERS: Partial<Record<Hashtag, string>> = {
+  финансы:       "/mntrcomm_finansy.png",
+  digital:       "/ai_cover.png",
+  softskills:    "/softskills_cover.png",
+  эффективность: "/productivity_cover.png",
+  библиотека:    "/books_cover.png",
+  hardskills:    "/marketplaces_cover.png",
+};
 
 export interface Collection {
   id: string;
