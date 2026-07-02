@@ -1,6 +1,15 @@
 "use client";
 import { Material, HASHTAG_META } from "@/lib/content";
 
+function openTgLink(url: string) {
+  const tg = (window as any).Telegram?.WebApp;
+  if (tg?.openTelegramLink) {
+    tg.openTelegramLink(url);
+  } else {
+    window.open(url, "_blank");
+  }
+}
+
 export function MaterialCard({ material, onRead }: { material: Material; onRead?: () => void }) {
   return (
     <div
@@ -62,7 +71,7 @@ export function MaterialCard({ material, onRead }: { material: Material; onRead?
           {material.title}
         </p>
 
-        {/* Description from post */}
+        {/* Description */}
         {material.subtitle && (
           <p
             className="text-sm leading-relaxed cursor-pointer"
@@ -73,12 +82,10 @@ export function MaterialCard({ material, onRead }: { material: Material; onRead?
           </p>
         )}
 
-        {/* CTA button → Telegram post (comments with video lessons) */}
+        {/* CTA → открыть пост в Telegram через WebApp API */}
         {material.tgLink && (
-          <a
-            href={material.tgLink}
-            target="_blank"
-            rel="noreferrer"
+          <button
+            onClick={() => openTgLink(material.tgLink!)}
             className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold mt-1"
             style={{
               background: "linear-gradient(90deg, var(--mc-primary-dark), var(--mc-primary))",
@@ -86,7 +93,7 @@ export function MaterialCard({ material, onRead }: { material: Material; onRead?
             }}
           >
             Перейти к посту →
-          </a>
+          </button>
         )}
       </div>
     </div>

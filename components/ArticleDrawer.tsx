@@ -1,6 +1,15 @@
 "use client";
 import { Material, HASHTAG_META } from "@/lib/content";
 
+function openTgLink(url: string) {
+  const tg = (window as any).Telegram?.WebApp;
+  if (tg?.openTelegramLink) {
+    tg.openTelegramLink(url);
+  } else {
+    window.open(url, "_blank");
+  }
+}
+
 function extractLinks(text: string): { url: string; label: string }[] {
   const matches = text.match(/https?:\/\/[^\s]+/g) || [];
   return matches.map((url) => {
@@ -109,12 +118,10 @@ export function ArticleDrawer({ material, onClose }: { material: Material | null
             </div>
           )}
 
-          {/* Main CTA → Telegram post (video lessons in comments) */}
+          {/* Main CTA → открыть пост в Telegram через WebApp API */}
           {material.tgLink && (
-            <a
-              href={material.tgLink}
-              target="_blank"
-              rel="noreferrer"
+            <button
+              onClick={() => openTgLink(material.tgLink!)}
               className="flex items-center justify-center gap-2 w-full mt-6 py-3.5 rounded-xl text-sm font-semibold"
               style={{
                 background: "linear-gradient(90deg, var(--mc-primary-dark), var(--mc-primary))",
@@ -122,7 +129,7 @@ export function ArticleDrawer({ material, onClose }: { material: Material | null
               }}
             >
               Перейти к посту →
-            </a>
+            </button>
           )}
 
           <div className="h-8" />
