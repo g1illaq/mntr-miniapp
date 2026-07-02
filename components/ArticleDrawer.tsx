@@ -121,7 +121,7 @@ export function ArticleDrawer({ material, onClose }: { material: Material | null
                 color: "#fff",
               }}
             >
-              Смотреть уроки в Telegram →
+              Перейти к посту →
             </a>
           )}
 

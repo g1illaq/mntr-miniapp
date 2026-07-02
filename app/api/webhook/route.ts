@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
       const msgId = channelMsgId ?? (msg.message_id + 1_000_000);
 
       const hashtags = extractHashtags(text);
-      const firstLine = text.split("\n")[0].replace(/[*_#*_→➡️]/g, "").trim();
+      const firstLine = text.split("\n")[0].replace(/[*_]/g, "").trim();
 
       // Фото из пересланного поста
       let photoUrl: string | null = null;

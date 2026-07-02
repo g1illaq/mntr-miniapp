@@ -85,7 +85,7 @@ export function MaterialCard({ material, onRead }: { material: Material; onRead?
               color: "#fff",
             }}
           >
-            Смотреть уроки →
+            Перейти к посту →
           </a>
         )}
       </div>
