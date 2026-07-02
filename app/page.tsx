@@ -53,6 +53,7 @@ export default function Home() {
   const [openArticle, setOpenArticle] = useState<Material | null>(null);
   const [realPosts, setRealPosts] = useState<Material[]>([]);
   const [postsLoaded, setPostsLoaded] = useState(false);
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   useEffect(() => {
     const tg = (window as any).Telegram?.WebApp;
@@ -64,12 +65,22 @@ export default function Home() {
 
     // Load real posts from Supabase
     fetch("/api/posts")
-      .then((r) => r.json())
-      .then(({ posts }) => {
-        setRealPosts((posts || []).map(postToMaterial));
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then(({ posts, error }) => {
+        if (error) throw new Error(error);
+        const mapped = (posts || []).map((p: any) => {
+          try { return postToMaterial(p); } catch { return null; }
+        }).filter(Boolean) as Material[];
+        setRealPosts(mapped);
         setPostsLoaded(true);
       })
-      .catch(() => { setPostsLoaded(true); });
+      .catch((e) => {
+        setFetchError(String(e));
+        setPostsLoaded(true);
+      });
   }, []);
 
   const materials = realPosts;
@@ -266,6 +277,14 @@ export default function Home() {
             </div>
             {!postsLoaded
               ? <div className="flex justify-center py-16"><div className="w-6 h-6 rounded-full border-2 border-white/10 border-t-white animate-spin" /></div>
+              : fetchError
+                ? <div className="text-center py-16 px-4">
+                    <p className="text-2xl mb-3">⚠️</p>
+                    <p className="text-sm mb-2" style={{ color: "var(--mc-text-muted)" }}>Ошибка загрузки</p>
+                    <p className="text-xs mb-4" style={{ color: "var(--mc-text-faint)", fontFamily: "var(--mc-font-mono)" }}>{fetchError}</p>
+                    <button onClick={() => window.location.reload()} className="px-4 py-2 rounded-xl text-sm font-semibold"
+                      style={{ backgroundColor: "var(--mc-primary)", color: "#fff" }}>Обновить</button>
+                  </div>
               : filteredMaterials.length === 0
                 ? <div className="text-center py-16">
                     <p className="text-4xl mb-3">{search || filter.hashtags.length > 0 ? "🔍" : "📭"}</p>
