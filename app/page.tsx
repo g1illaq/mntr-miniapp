@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import Image from "next/image";
-import { collections, currentMonth, HASHTAG_META, HASHTAG_COVERS, Hashtag, Material } from "@/lib/content";
+import { collections, currentMonth, HASHTAG_META, Hashtag, Material } from "@/lib/content";
 import type { Post } from "@/lib/supabase";
 import { SprintCard } from "@/components/SprintCard";
 import { MaterialCard } from "@/components/MaterialCard";
@@ -99,6 +99,16 @@ export default function Home() {
     return list;
   }, [search, filter, materials]);
 
+  // Подборки с реальными счётчиками из базы
+  const liveCollections = useMemo(() =>
+    collections
+      .map((col) => ({
+        ...col,
+        count: materials.filter((m) => m.hashtags.includes(col.hashtag)).length,
+      }))
+      .filter((col) => col.count > 0),
+  [materials]);
+
   const activeFilterCount = filter.hashtags.length + (filter.sort === "old" ? 1 : 0);
 
   if (loading) {
@@ -183,36 +193,38 @@ export default function Home() {
         {tab === "home" && (
           <div className="space-y-7 pb-4">
 
-            {/* Collections */}
-            <div>
-              <div className="flex items-center justify-between px-4 mb-3">
-                <p className="font-bold text-lg" style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>Подборки</p>
-                <button className="text-sm font-semibold" style={{ color: "var(--mc-primary-bright)" }} onClick={() => setTab("materials")}>
-                  Смотреть все →
-                </button>
-              </div>
-              <div className="flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-hide">
-                {collections.map((col) => (
-                  <button key={col.id}
-                    onClick={() => { setFilter((f) => ({ ...f, hashtags: [col.hashtag] })); setTab("materials"); }}
-                    className="shrink-0 w-40 rounded-2xl overflow-hidden text-left active:opacity-70 transition-opacity"
-                    style={{ border: "1px solid var(--mc-ink-border)" }}>
-                    <div className="relative h-28">
-                      <Image src={col.cover} alt={col.title} fill className="object-cover" />
-                      <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 30%, rgba(14,14,17,0.9))" }} />
-                      <div className="absolute bottom-2 left-3">
-                        <span className="label-mono" style={{ color: "var(--mc-primary-bright)" }}>{col.count} материалов</span>
-                      </div>
-                    </div>
-                    <div className="px-3 py-2.5" style={{ backgroundColor: "var(--mc-ink-3)" }}>
-                      <p className="text-sm font-bold leading-snug" style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>
-                        {col.title}
-                      </p>
-                    </div>
+            {/* Collections — только реальные, с живыми счётчиками */}
+            {liveCollections.length > 0 && (
+              <div>
+                <div className="flex items-center justify-between px-4 mb-3">
+                  <p className="font-bold text-lg" style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>Подборки</p>
+                  <button className="text-sm font-semibold" style={{ color: "var(--mc-primary-bright)" }} onClick={() => setTab("materials")}>
+                    Смотреть все →
                   </button>
-                ))}
+                </div>
+                <div className="flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-hide">
+                  {liveCollections.map((col) => (
+                    <button key={col.id}
+                      onClick={() => { setFilter((f) => ({ ...f, hashtags: [col.hashtag] })); setTab("materials"); }}
+                      className="shrink-0 w-40 rounded-2xl overflow-hidden text-left active:opacity-70 transition-opacity"
+                      style={{ border: "1px solid var(--mc-ink-border)" }}>
+                      <div className="relative h-28">
+                        <Image src={col.cover} alt={col.title} fill className="object-cover" />
+                        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 30%, rgba(14,14,17,0.9))" }} />
+                        <div className="absolute bottom-2 left-3">
+                          <span className="label-mono" style={{ color: "var(--mc-primary-bright)" }}>{col.count} материалов</span>
+                        </div>
+                      </div>
+                      <div className="px-3 py-2.5" style={{ backgroundColor: "var(--mc-ink-3)" }}>
+                        <p className="text-sm font-bold leading-snug" style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>
+                          {col.title}
+                        </p>
+                      </div>
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Sprint */}
             <div className="px-4"><SprintCard /></div>
