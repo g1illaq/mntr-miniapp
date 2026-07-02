@@ -191,18 +191,17 @@ export default function Home() {
 
         {/* HOME */}
         {tab === "home" && (
-          <div className="space-y-7 pb-4">
-
-            {/* Collections — только реальные, с живыми счётчиками */}
+          <div className="px-4 space-y-4 pb-4">
+            {/* Подборки — только если есть реальные посты */}
             {liveCollections.length > 0 && (
               <div>
-                <div className="flex items-center justify-between px-4 mb-3">
+                <div className="flex items-center justify-between mb-3">
                   <p className="font-bold text-lg" style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>Подборки</p>
                   <button className="text-sm font-semibold" style={{ color: "var(--mc-primary-bright)" }} onClick={() => setTab("materials")}>
                     Смотреть все →
                   </button>
                 </div>
-                <div className="flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-hide">
+                <div className="flex gap-3 overflow-x-auto pb-1 scrollbar-hide">
                   {liveCollections.map((col) => (
                     <button key={col.id}
                       onClick={() => { setFilter((f) => ({ ...f, hashtags: [col.hashtag] })); setTab("materials"); }}
@@ -226,41 +225,35 @@ export default function Home() {
               </div>
             )}
 
-            {/* Sprint */}
-            <div className="px-4"><SprintCard /></div>
-
-            {/* Month theme */}
-            <div className="px-4">
-              <div className="rounded-2xl p-4 space-y-3" style={{ backgroundColor: "var(--mc-ink-2)", border: "1px solid var(--mc-ink-border)" }}>
-                <span className="label-mono" style={{ color: "var(--mc-primary-bright)" }}>{currentMonth.month} · Тема месяца</span>
-                <p className="font-black text-xl leading-snug" style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>
-                  {currentMonth.theme}
-                </p>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--mc-text-muted)" }}>{currentMonth.goal}</p>
-                <div className="pt-3" style={{ borderTop: "1px solid var(--mc-ink-border)" }}>
-                  <span className="label-mono">Вопрос месяца</span>
-                  <p className="text-sm mt-1 italic" style={{ color: "var(--mc-text-muted)" }}>"{currentMonth.question}"</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Recent */}
+            {/* Новые материалы */}
             <div>
-              <p className="font-bold text-lg px-4 mb-3" style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>
-                Новые материалы
-              </p>
-              <div className="px-4 space-y-3">
-                {!postsLoaded
-                  ? <div className="text-center py-8"><div className="w-5 h-5 rounded-full border-2 border-white/10 border-t-white animate-spin mx-auto" /></div>
-                  : materials.length === 0
-                    ? <div className="text-center py-8"><p className="text-sm" style={{ color: "var(--mc-text-muted)" }}>Материалы скоро появятся</p></div>
-                    : materials.slice(0, 3).map((m) => <MaterialCard key={m.id} material={m} onRead={() => setOpenArticle(m)} />)
-                }
-                <button onClick={() => setTab("materials")} className="w-full py-3 rounded-xl text-sm font-semibold"
-                  style={{ backgroundColor: "var(--mc-ink-2)", color: "var(--mc-text-muted)", border: "1px solid var(--mc-ink-border)" }}>
-                  Все материалы →
-                </button>
-              </div>
+              {materials.length > 0 && (
+                <p className="font-bold text-lg mb-3" style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>
+                  Новые материалы
+                </p>
+              )}
+              {!postsLoaded
+                ? <div className="flex justify-center py-16"><div className="w-6 h-6 rounded-full border-2 border-white/10 border-t-white animate-spin" /></div>
+                : materials.length === 0
+                  ? (
+                    <div className="flex flex-col items-center justify-center py-24 gap-3">
+                      <div className="text-5xl">📭</div>
+                      <p className="text-base font-semibold" style={{ color: "var(--mc-text)" }}>Материалы появятся здесь</p>
+                      <p className="text-sm text-center" style={{ color: "var(--mc-text-muted)" }}>Перешли посты из канала в бота — они сразу появятся</p>
+                    </div>
+                  )
+                  : (
+                    <div className="space-y-3">
+                      {materials.slice(0, 3).map((m) => <MaterialCard key={m.id} material={m} onRead={() => setOpenArticle(m)} />)}
+                      {materials.length > 3 && (
+                        <button onClick={() => setTab("materials")} className="w-full py-3 rounded-xl text-sm font-semibold"
+                          style={{ backgroundColor: "var(--mc-ink-2)", color: "var(--mc-text-muted)", border: "1px solid var(--mc-ink-border)" }}>
+                          Все материалы →
+                        </button>
+                      )}
+                    </div>
+                  )
+              }
             </div>
           </div>
         )}
