@@ -63,6 +63,25 @@ export const HASHTAG_META: Record<Hashtag, { emoji: string; label: string }> = {
   faq:           { emoji: "❓", label: "FAQ"            },
 };
 
+export const HASHTAG_DIRECTION: Partial<Record<Hashtag, Direction>> = {
+  саморазвитие:  "M",
+  образование:   "M",
+  библиотека:    "M",
+  разборы:       "M",
+  softskills:    "M",
+  встречи:       "N",
+  обсуждения:    "N",
+  анонсы:        "N",
+  faq:           "N",
+  здоровье:      "T",
+  биохакинг:     "T",
+  эффективность: "T",
+  финансы:       "R",
+  hardskills:    "R",
+  digital:       "R",
+  промокоды:     "R",
+};
+
 export const DIRECTION_META: Record<Direction, { label: string; color: string; bg: string; full: string }> = {
   M: { label: "Mind",        color: "#4f8bff", bg: "#2d6bf610", full: "M — Мышление"   },
   N: { label: "Navigation",  color: "#4f8bff", bg: "#2d6bf610", full: "N — Направление" },

@@ -21,3 +21,26 @@ export interface Post {
   published_at: string;
   created_at: string;
 }
+
+export interface Sprint {
+  id: string;
+  title: string;
+  description: string | null;
+  direction: string | null;
+  daily_task: string | null;
+  start_date: string;
+  end_date: string;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface Checkin {
+  id: string;
+  user_id: number;
+  sprint_id: string | null;
+  checkin_date: string;
+  energy: number | null;
+  practice_done: string;
+  note: string | null;
+  created_at: string;
+}

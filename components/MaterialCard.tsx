@@ -14,9 +14,11 @@ interface Props {
   isSaved?: boolean;
   onToggleSave?: () => void;
   onRead?: () => void;
+  isCompleted?: boolean;
+  onToggleComplete?: () => void;
 }
 
-export function MaterialCard({ material, isSaved = false, onToggleSave, onRead }: Props) {
+export function MaterialCard({ material, isSaved = false, onToggleSave, onRead, isCompleted = false, onToggleComplete }: Props) {
   return (
     <div
       className="rounded-2xl overflow-hidden active:opacity-80 transition-opacity"
@@ -87,6 +89,28 @@ export function MaterialCard({ material, isSaved = false, onToggleSave, onRead }
             style={{ background: "linear-gradient(90deg, var(--mc-primary-dark), var(--mc-primary))", color: "#fff" }}
           >
             Перейти к посту →
+          </button>
+        )}
+
+        {/* Изучено toggle */}
+        {onToggleComplete && (
+          <button
+            onClick={(e) => { e.stopPropagation(); onToggleComplete(); }}
+            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-sm font-medium"
+            style={{
+              backgroundColor: isCompleted ? "rgba(45,107,246,0.12)" : "var(--mc-ink-2)",
+              color: isCompleted ? "var(--mc-primary-bright)" : "var(--mc-text-faint)",
+              border: `1px solid ${isCompleted ? "rgba(45,107,246,0.35)" : "var(--mc-ink-border)"}`,
+            }}
+          >
+            {isCompleted ? (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M20 6 9 17l-5-5" />
+                </svg>
+                Изучено
+              </>
+            ) : "Отметить изученным"}
           </button>
         )}
       </div>
