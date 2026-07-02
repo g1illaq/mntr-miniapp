@@ -9,7 +9,10 @@ const HASHTAG_DIR: Record<string, "M" | "N" | "T" | "R"> = {
 };
 
 function firstDir(hashtags: string[]): "M" | "N" | "T" | "R" | null {
-  for (const h of hashtags) if (HASHTAG_DIR[h]) return HASHTAG_DIR[h];
+  for (const h of hashtags) {
+    const key = h.replace(/^#/, "").toLowerCase();
+    if (HASHTAG_DIR[key]) return HASHTAG_DIR[key];
+  }
   return null;
 }
 

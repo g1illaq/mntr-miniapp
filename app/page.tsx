@@ -47,7 +47,16 @@ function postToMaterial(post: Post): Material {
   const stripEmoji = (s: string) =>
     s.replace(/[\u{1F000}-\u{1FAFF}\u{2300}-\u{27BF}\u{2B00}-\u{2BFF}]/gu, "").replace(/\s{2,}/g, " ").trim();
 
-  const titleLine = stripEmoji(caption.split("\n")[0].replace(/[*_]/g, ""));
+  // Ищем первую строку, которая после очистки не пустая и не является строкой хэштегов
+  const captionLines2 = caption.split("\n");
+  let titleLine = "";
+  for (const line of captionLines2) {
+    const cleaned = stripEmoji(line.replace(/[*_]/g, "")).trim();
+    if (cleaned && !cleaned.startsWith("#")) {
+      titleLine = cleaned;
+      break;
+    }
+  }
   const title = titleLine || "Материал из канала";
 
   const captionLines = caption.split("\n").slice(1).filter(l => !l.startsWith("#")).join(" ").replace(/[*_]/g, "").trim();
