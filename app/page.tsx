@@ -31,9 +31,9 @@ function postToMaterial(post: Post): Material {
     (validHashtags.length > 0 ? HASHTAG_COVERS[validHashtags[0]] : undefined) ||
     undefined;
 
-  // Ссылка на пост в канале (только для реальных message_id)
-  const tgLink = post.message_id > 0 && post.message_id < 10_000_000
-    ? `https://t.me/mntrcomm/${post.message_id}`
+  // Ссылка на пост в приватном канале (реальные message_id < 1_000_000; синтетические ≥ 1_000_000)
+  const tgLink = post.message_id > 0 && post.message_id < 1_000_000
+    ? `https://t.me/c/3555330551/${post.message_id}`
     : undefined;
 
   return {
