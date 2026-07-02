@@ -93,12 +93,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true });
     }
 
-    // ── Комментарий от владельца в группе обсуждений ─────────────────────
-    // Захватываем ТОЛЬКО твои ответы на сам пост канала (не ответы участникам)
-    if (
-      msg.chat?.id === DISCUSSION_GROUP_ID &&
-      msg.from?.id === OWNER_ID
-    ) {
+    // ── Сообщения в группе обсуждений ────────────────────────────────────
+    if (msg.chat?.id === DISCUSSION_GROUP_ID) {
       const commentText = msg.text || msg.caption || "";
       if (!commentText.trim()) return NextResponse.json({ ok: true });
 
@@ -108,7 +104,15 @@ export async function POST(req: NextRequest) {
         replyTo?.reply_to_message?.forward_from_message_id ||
         null;
 
+      // Нужна привязка к посту канала
       if (!channelPostId) return NextResponse.json({ ok: true });
+
+      const isOwner = msg.from?.id === OWNER_ID;
+      const isForwarded = !!msg.forward_from_chat || !!msg.forward_from; // пересланный урок
+      const isLesson = /урок\s*\d+|→\s*урок|блок\s*\d+/i.test(commentText);
+
+      // Захватываем: твои сообщения ИЛИ пересланные уроки из другого чата
+      if (!isOwner && !isForwarded && !isLesson) return NextResponse.json({ ok: true });
 
       const { data: existing } = await supabase
         .from("posts")
