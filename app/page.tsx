@@ -16,11 +16,14 @@ function postToMaterial(post: Post): Material {
   const caption = post.caption || "";
   const body = post.body || "";
 
-  const titleLine = caption.split("\n")[0].replace(/[*_]/g, "").trim();
+  const stripEmoji = (s: string) =>
+    s.replace(/[\u{1F000}-\u{1FAFF}\u{2300}-\u{27BF}\u{2B00}-\u{2BFF}]/gu, "").replace(/\s{2,}/g, " ").trim();
+
+  const titleLine = stripEmoji(caption.split("\n")[0].replace(/[*_]/g, ""));
   const title = titleLine || "Материал из канала";
 
   const captionLines = caption.split("\n").slice(1).filter(l => !l.startsWith("#")).join(" ").replace(/[*_]/g, "").trim();
-  const subtitle = (captionLines || body.split("\n")[0].replace(/[*_]/g, "")).trim().slice(0, 160);
+  const subtitle = stripEmoji(captionLines || body.split("\n")[0].replace(/[*_]/g, "")).slice(0, 160);
 
   const validHashtags = post.hashtags
     .map((h) => h.replace("#", ""))

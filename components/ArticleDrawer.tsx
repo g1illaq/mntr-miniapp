@@ -9,6 +9,14 @@ function openTgLink(url: string) {
   window.location.href = url;
 }
 
+// Убираем эмодзи из текста, оставляем буквы/цифры/пунктуацию
+function stripEmoji(str: string): string {
+  return str
+    .replace(/[\u{1F000}-\u{1FAFF}\u{2300}-\u{27BF}\u{2B00}-\u{2BFF}]/gu, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 function extractLinks(text: string): { url: string; label: string }[] {
   const matches = text.match(/https?:\/\/[^\s]+/g) || [];
   return matches.map((url) => {
@@ -19,18 +27,38 @@ function extractLinks(text: string): { url: string; label: string }[] {
   });
 }
 
-function renderBody(text: string) {
-  return text.split("\n").map((line, i) => {
-    if (/^https?:\/\//.test(line.trim())) return null;
-    if (line.startsWith("## ")) {
+function renderBody(rawText: string) {
+  const lines = rawText.split("\n");
+  return lines.map((rawLine, i) => {
+    const line = stripEmoji(rawLine);
+    if (!line) return <div key={i} className="h-3" />;
+    if (/^https?:\/\//.test(line)) return null;
+
+    // Подзаголовок: строка без — в начале, за которой идёт строка с —
+    const nextNonEmpty = lines.slice(i + 1).find(l => l.trim());
+    const isHeading = !line.startsWith("—") && !line.startsWith("-") &&
+      (nextNonEmpty?.trim().startsWith("—") || nextNonEmpty?.trim().startsWith("-"));
+
+    if (isHeading) {
       return (
-        <h2 key={i} className="text-lg font-bold mt-6 mb-2"
+        <p key={i} className="text-sm font-bold mt-4 mb-1"
           style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}>
-          {line.slice(3)}
-        </h2>
+          {line}
+        </p>
       );
     }
-    if (line.trim() === "") return <div key={i} className="h-2" />;
+
+    // Пункты списка
+    if (line.startsWith("—") || line.startsWith("-")) {
+      return (
+        <p key={i} className="text-sm leading-relaxed pl-3 mb-0.5"
+          style={{ color: "var(--mc-text-muted)" }}>
+          {line}
+        </p>
+      );
+    }
+
+    // Обычный текст с поддержкой **жирного**
     const parts = line.split(/\*\*(.*?)\*\*/g);
     const rendered = parts.map((part, j) =>
       j % 2 === 1
