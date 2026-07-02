@@ -73,39 +73,46 @@ export async function POST(req: NextRequest) {
     const msg = body.message;
     if (!msg) return NextResponse.json({ ok: true });
 
-    // ── Личное сообщение боту: пересланный урок для импорта ──────────────
-    // Открой @mntrcomm_bot и перешли туда старые уроки из комментариев
+    // ── Личное сообщение боту: перешли пост канала → бот сохраняет с фото ──
     if (msg.chat?.type === "private" && msg.from?.id === OWNER_ID) {
       const text = msg.text || msg.caption || "";
       if (!text.trim()) return NextResponse.json({ ok: true });
 
+      // forward_from_message_id = реальный message_id поста в канале
+      const channelMsgId = msg.forward_from_message_id as number | undefined;
+      const msgId = channelMsgId ?? (msg.message_id + 1_000_000);
+
       const hashtags = extractHashtags(text);
-      const firstLine = text.split("\n")[0].replace(/[*_#]/g, "").trim();
+      const firstLine = text.split("\n")[0].replace(/[*_#*_→➡️]/g, "").trim();
+
+      // Фото из пересланного поста
+      let photoUrl: string | null = null;
+      if (msg.photo?.length > 0) {
+        const largest = msg.photo[msg.photo.length - 1];
+        photoUrl = await uploadPhoto(largest.file_id, msgId);
+      }
 
       await supabase.from("posts").upsert(
         {
-          message_id: msg.forward_from_message_id || msg.message_id + 1_000_000,
-          caption: firstLine || "Материал из канала",
-          body: text,
-          photo_url: null,
+          message_id: msgId,
+          caption: text,
+          body: null,
+          photo_url: photoUrl,
           hashtags,
           published_at: new Date((msg.forward_date || msg.date) * 1000).toISOString(),
         },
         { onConflict: "message_id" }
       );
 
-      // Подтверждение боту
-      await fetch(
-        `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: OWNER_ID,
-            text: `✅ Урок сохранён: «${firstLine.slice(0, 50)}»`,
-          }),
-        }
-      );
+      const photoNote = photoUrl ? " + фото" : "";
+      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: OWNER_ID,
+          text: `✅ Сохранено${photoNote}: «${firstLine.slice(0, 50)}»\n🔗 t.me/c/3555330551/${msgId}`,
+        }),
+      });
 
       return NextResponse.json({ ok: true });
     }
