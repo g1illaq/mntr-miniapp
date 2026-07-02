@@ -47,14 +47,24 @@ function postToMaterial(post: Post): Material {
   const stripEmoji = (s: string) =>
     s.replace(/[\u{1F000}-\u{1FAFF}\u{2300}-\u{27BF}\u{2B00}-\u{2BFF}]/gu, "").replace(/\s{2,}/g, " ").trim();
 
-  // Ищем первую строку, которая после очистки не пустая и не является строкой хэштегов
   const captionLines2 = caption.split("\n");
   let titleLine = "";
+  // Pass 1: первая строка без эмодзи, не начинающаяся с #
   for (const line of captionLines2) {
     const cleaned = stripEmoji(line.replace(/[*_]/g, "")).trim();
     if (cleaned && !cleaned.startsWith("#")) {
-      titleLine = cleaned;
+      titleLine = cleaned.slice(0, 100);
       break;
+    }
+  }
+  // Pass 2: первая непустая строка, вырезаем # (бывает когда весь caption = хэштеги)
+  if (!titleLine) {
+    for (const line of captionLines2) {
+      const cleaned = stripEmoji(line).trim();
+      if (cleaned) {
+        titleLine = cleaned.replace(/#[\wа-яА-ЯёЁ]+/g, (m) => m.slice(1)).replace(/\s+/g, " ").trim().slice(0, 100);
+        break;
+      }
     }
   }
   const title = titleLine || "Материал из канала";
@@ -228,9 +238,11 @@ export default function Home() {
       .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
       .then(({ posts, error }) => {
         if (error) throw new Error(error);
-        const mapped = (posts || []).map((p: any) => {
-          try { return postToMaterial(p); } catch { return null; }
-        }).filter(Boolean) as Material[];
+        const mapped = (posts || [])
+          .filter((p: any) => (p.caption || p.body || "").trim()) // скрываем посты без текста
+          .map((p: any) => {
+            try { return postToMaterial(p); } catch { return null; }
+          }).filter(Boolean) as Material[];
         setRealPosts(mapped);
         setPostsLoaded(true);
       })

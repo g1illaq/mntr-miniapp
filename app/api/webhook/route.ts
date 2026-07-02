@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
       const text = channelPost.text || null;
       const caption = channelPost.caption || null;
       const content = text || caption || "";
+      if (!content.trim()) return NextResponse.json({ ok: true }); // фото без текста — пропускаем
       const hashtags = extractHashtags(content);
 
       let photoUrl: string | null = null;
