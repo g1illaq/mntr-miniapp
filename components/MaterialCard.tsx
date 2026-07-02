@@ -3,11 +3,15 @@ import { Material, HASHTAG_META } from "@/lib/content";
 
 function openTgLink(url: string) {
   const tg = (window as any).Telegram?.WebApp;
+  // 1. Пробуем официальный метод Mini App API
   if (tg?.openTelegramLink) {
-    tg.openTelegramLink(url);
-  } else {
-    window.open(url, "_blank");
+    try {
+      tg.openTelegramLink(url);
+      return;
+    } catch {}
   }
+  // 2. Telegram WebView перехватывает t.me ссылки при навигации в том же фрейме
+  window.location.href = url;
 }
 
 export function MaterialCard({ material, onRead }: { material: Material; onRead?: () => void }) {
@@ -40,7 +44,6 @@ export function MaterialCard({ material, onRead }: { material: Material; onRead?
       </div>
 
       <div className="p-4 space-y-2.5">
-        {/* Hashtag chips */}
         {material.hashtags.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
             {material.hashtags.map((tag) => {
@@ -62,7 +65,6 @@ export function MaterialCard({ material, onRead }: { material: Material; onRead?
           </div>
         )}
 
-        {/* Title */}
         <p
           className="font-bold text-base leading-snug cursor-pointer"
           style={{ color: "var(--mc-text)", fontFamily: "var(--mc-font-heading)" }}
@@ -71,7 +73,6 @@ export function MaterialCard({ material, onRead }: { material: Material; onRead?
           {material.title}
         </p>
 
-        {/* Description */}
         {material.subtitle && (
           <p
             className="text-sm leading-relaxed cursor-pointer"
@@ -82,7 +83,6 @@ export function MaterialCard({ material, onRead }: { material: Material; onRead?
           </p>
         )}
 
-        {/* CTA → открыть пост в Telegram через WebApp API */}
         {material.tgLink && (
           <button
             onClick={() => openTgLink(material.tgLink!)}

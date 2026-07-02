@@ -4,10 +4,9 @@ import { Material, HASHTAG_META } from "@/lib/content";
 function openTgLink(url: string) {
   const tg = (window as any).Telegram?.WebApp;
   if (tg?.openTelegramLink) {
-    tg.openTelegramLink(url);
-  } else {
-    window.open(url, "_blank");
+    try { tg.openTelegramLink(url); return; } catch {}
   }
+  window.location.href = url;
 }
 
 function extractLinks(text: string): { url: string; label: string }[] {
