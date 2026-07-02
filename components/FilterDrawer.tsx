@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Hashtag, HASHTAG_META } from "@/lib/content";
 
-interface FilterState { hashtags: Hashtag[]; sort: "new" | "old"; }
+interface FilterState { hashtags: Hashtag[]; sort: "new" | "old"; showSaved: boolean; }
 interface Props { open: boolean; onClose: () => void; value: FilterState; onChange: (v: FilterState) => void; }
 
 export function FilterDrawer({ open, onClose, value, onChange }: Props) {
@@ -12,7 +12,7 @@ export function FilterDrawer({ open, onClose, value, onChange }: Props) {
     setLocal((p) => ({ ...p, hashtags: p.hashtags.includes(tag) ? p.hashtags.filter((t) => t !== tag) : [...p.hashtags, tag] }));
 
   const apply = () => { onChange(local); onClose(); };
-  const reset = () => { const v = { hashtags: [], sort: "new" as const }; setLocal(v); onChange(v); onClose(); };
+  const reset = () => { const v = { hashtags: [], sort: "new" as const, showSaved: false }; setLocal(v); onChange(v); onClose(); };
 
   if (!open) return null;
 

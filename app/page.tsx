@@ -10,7 +10,20 @@ import { FilterDrawer } from "@/components/FilterDrawer";
 import { Logo } from "@/components/Logo";
 import { ArticleDrawer } from "@/components/ArticleDrawer";
 type Tab = "home" | "materials" | "checkin" | "progress";
-interface FilterState { hashtags: Hashtag[]; sort: "new" | "old"; }
+interface FilterState { hashtags: Hashtag[]; sort: "new" | "old"; showSaved: boolean; }
+
+function getSavedKey(userId?: number) {
+  return `mntr_saved_${userId ?? "guest"}`;
+}
+function loadSaved(userId?: number): Set<string> {
+  try {
+    const raw = localStorage.getItem(getSavedKey(userId));
+    return new Set(raw ? JSON.parse(raw) : []);
+  } catch { return new Set(); }
+}
+function persistSaved(ids: Set<string>, userId?: number) {
+  try { localStorage.setItem(getSavedKey(userId), JSON.stringify([...ids])); } catch {}
+}
 
 function postToMaterial(post: Post): Material {
   const caption = post.caption || "";
@@ -53,8 +66,9 @@ export default function Home() {
   const [tab, setTab] = useState<Tab>("home");
   const [search, setSearch] = useState("");
   const [filterOpen, setFilterOpen] = useState(false);
-  const [filter, setFilter] = useState<FilterState>({ hashtags: [], sort: "new" });
+  const [filter, setFilter] = useState<FilterState>({ hashtags: [], sort: "new", showSaved: false });
   const [user, setUser] = useState<{ first_name: string } | null>(null);
+  const [userId, setUserId] = useState<number | undefined>(undefined);
   const [isMember, setIsMember] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const [mood, setMood] = useState<number | null>(null);
@@ -63,12 +77,25 @@ export default function Home() {
   const [realPosts, setRealPosts] = useState<Material[]>([]);
   const [postsLoaded, setPostsLoaded] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
+  const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
+
+  const toggleSave = (id: string) => {
+    setSavedIds(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      persistSaved(next, userId);
+      return next;
+    });
+  };
 
   useEffect(() => {
     const tg = (window as any).Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
     const tgUser = tg?.initDataUnsafe?.user;
+    const uid = tgUser?.id as number | undefined;
+    setUserId(uid);
     setUser({ first_name: tgUser?.first_name || "Участник" });
+    setSavedIds(loadSaved(uid));
     setIsMember(true);
     setLoading(false);
 
@@ -96,11 +123,12 @@ export default function Home() {
 
   const filteredMaterials = useMemo(() => {
     let list = [...materials];
+    if (filter.showSaved) list = list.filter((m) => savedIds.has(m.id));
     if (search) list = list.filter((m) => m.title.toLowerCase().includes(search.toLowerCase()) || m.subtitle.toLowerCase().includes(search.toLowerCase()));
     if (filter.hashtags.length > 0) list = list.filter((m) => m.hashtags.some((t) => filter.hashtags.includes(t)));
     if (filter.sort === "old") list = list.reverse();
     return list;
-  }, [search, filter, materials]);
+  }, [search, filter, materials, savedIds]);
 
   // Подборки с реальными счётчиками из базы
   const liveCollections = useMemo(() =>
@@ -247,7 +275,7 @@ export default function Home() {
                   )
                   : (
                     <div className="space-y-3">
-                      {materials.slice(0, 3).map((m) => <MaterialCard key={m.id} material={m} onRead={() => setOpenArticle(m)} />)}
+                      {materials.slice(0, 3).map((m) => <MaterialCard key={m.id} material={m} isSaved={savedIds.has(m.id)} onToggleSave={() => toggleSave(m.id)} onRead={() => setOpenArticle(m)} />)}
                       {materials.length > 3 && (
                         <button onClick={() => setTab("materials")} className="w-full py-3 rounded-xl text-sm font-semibold"
                           style={{ backgroundColor: "var(--mc-ink-2)", color: "var(--mc-text-muted)", border: "1px solid var(--mc-ink-border)" }}>
@@ -265,18 +293,30 @@ export default function Home() {
         {tab === "materials" && (
           <div className="px-4 pt-2 space-y-3">
             <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-              <button onClick={() => setFilter((f) => ({ ...f, hashtags: [] }))}
+              {/* Сохранённые */}
+              <button
+                onClick={() => setFilter((f) => ({ ...f, showSaved: !f.showSaved, hashtags: [] }))}
+                className="shrink-0 px-3.5 py-1.5 rounded-full text-sm font-medium whitespace-nowrap"
+                style={{
+                  backgroundColor: filter.showSaved ? "rgba(45,107,246,0.2)" : "var(--mc-ink-2)",
+                  color: filter.showSaved ? "var(--mc-primary-bright)" : "var(--mc-text-muted)",
+                  border: `1px solid ${filter.showSaved ? "var(--mc-primary)" : "var(--mc-ink-border)"}`,
+                }}>
+                🔖 Сохранённые{savedIds.size > 0 ? ` (${savedIds.size})` : ""}
+              </button>
+              {/* Все */}
+              <button onClick={() => setFilter((f) => ({ ...f, hashtags: [], showSaved: false }))}
                 className="shrink-0 px-3.5 py-1.5 rounded-full text-sm font-medium"
                 style={{
-                  backgroundColor: filter.hashtags.length === 0 ? "var(--mc-primary)" : "var(--mc-ink-2)",
-                  color: filter.hashtags.length === 0 ? "#fff" : "var(--mc-text-muted)",
-                  border: `1px solid ${filter.hashtags.length === 0 ? "var(--mc-primary)" : "var(--mc-ink-border)"}`,
+                  backgroundColor: !filter.showSaved && filter.hashtags.length === 0 ? "var(--mc-primary)" : "var(--mc-ink-2)",
+                  color: !filter.showSaved && filter.hashtags.length === 0 ? "#fff" : "var(--mc-text-muted)",
+                  border: `1px solid ${!filter.showSaved && filter.hashtags.length === 0 ? "var(--mc-primary)" : "var(--mc-ink-border)"}`,
                 }}>Все</button>
               {(Object.entries(HASHTAG_META) as [Hashtag, typeof HASHTAG_META[Hashtag]][]).map(([tag, meta]) => {
                 const active = filter.hashtags.includes(tag);
                 return (
                   <button key={tag} onClick={() => setFilter((f) => ({
-                    ...f, hashtags: active ? f.hashtags.filter((t) => t !== tag) : [...f.hashtags, tag],
+                    ...f, showSaved: false, hashtags: active ? f.hashtags.filter((t) => t !== tag) : [...f.hashtags, tag],
                   }))}
                     className="shrink-0 px-3 py-1.5 rounded-full text-sm font-medium whitespace-nowrap"
                     style={{
@@ -301,12 +341,20 @@ export default function Home() {
                   </div>
               : filteredMaterials.length === 0
                 ? <div className="text-center py-16">
-                    <p className="text-4xl mb-3">{search || filter.hashtags.length > 0 ? "🔍" : "📭"}</p>
+                    <p className="text-4xl mb-3">{filter.showSaved ? "🔖" : search || filter.hashtags.length > 0 ? "🔍" : "📭"}</p>
                     <p className="text-sm" style={{ color: "var(--mc-text-muted)" }}>
-                      {search || filter.hashtags.length > 0 ? "Ничего не найдено" : "Материалы скоро появятся"}
+                      {filter.showSaved ? "Нет сохранённых материалов" : search || filter.hashtags.length > 0 ? "Ничего не найдено" : "Материалы скоро появятся"}
                     </p>
                   </div>
-                : filteredMaterials.map((m) => <MaterialCard key={m.id} material={m} onRead={() => setOpenArticle(m)} />)
+                : filteredMaterials.map((m) => (
+                    <MaterialCard
+                      key={m.id}
+                      material={m}
+                      isSaved={savedIds.has(m.id)}
+                      onToggleSave={() => toggleSave(m.id)}
+                      onRead={() => setOpenArticle(m)}
+                    />
+                  ))
             }
           </div>
         )}
