@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { checkChannelMembership } from "@/lib/telegram";
 
 // Owner IDs who always get access
-const OWNER_IDS = [172575833];
+const OWNER_IDS = [7276417797];
 
 export async function POST(req: NextRequest) {
   const { initData } = await req.json();

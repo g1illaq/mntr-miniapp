@@ -3,7 +3,7 @@ import { getServiceClient } from "@/lib/supabase";
 
 const BOT_TOKEN = process.env.BOT_TOKEN!;
 const DISCUSSION_GROUP_ID = -1003797823590;
-const OWNER_ID = 172575833;
+const OWNER_ID = 7276417797;
 
 function extractHashtags(text: string): string[] {
   const matches = text.match(/#[\wа-яА-ЯёЁ]+/g) || [];

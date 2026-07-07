@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServiceClient } from "@/lib/supabase";
 
-const OWNER_ID = Number(process.env.OWNER_TELEGRAM_ID ?? "172575833");
+const OWNER_ID = Number(process.env.OWNER_TELEGRAM_ID ?? "7276417797");
 
 export async function GET() {
   const db = getServiceClient();
