@@ -242,20 +242,51 @@ export default function Home() {
   useEffect(() => {
     const tg = (window as any).Telegram?.WebApp;
     if (tg) { tg.ready(); tg.expand(); }
+
+    const initData: string = tg?.initData || "";
     const tgUser = tg?.initDataUnsafe?.user;
-    const uid = tgUser?.id as number | undefined;
-    setUserId(uid);
-    setUser({ first_name: tgUser?.first_name || "Участник" });
-    setSavedIds(loadSaved(uid));
-    setIsMember(true);
-    setLoading(false);
+
+    // Проверяем членство в канале через сервер
+    if (initData) {
+      fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ initData }),
+      })
+        .then(r => r.json())
+        .then(({ user: u, isMember: m }) => {
+          const uid = u?.id as number | undefined;
+          setUserId(uid);
+          setUser({ first_name: u?.first_name || "Участник" });
+          setSavedIds(loadSaved(uid));
+          setIsMember(!!m);
+          setLoading(false);
+        })
+        .catch(() => {
+          // Ошибка сети — даём доступ, не блокируем
+          const uid = tgUser?.id as number | undefined;
+          setUserId(uid);
+          setUser({ first_name: tgUser?.first_name || "Участник" });
+          setSavedIds(loadSaved(uid));
+          setIsMember(true);
+          setLoading(false);
+        });
+    } else {
+      // Нет initData (открыто в браузере, не в Telegram) — блокируем
+      const uid = tgUser?.id as number | undefined;
+      setUserId(uid);
+      setUser({ first_name: tgUser?.first_name || "Участник" });
+      setSavedIds(loadSaved(uid));
+      setIsMember(false);
+      setLoading(false);
+    }
 
     fetch("/api/posts")
       .then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
       .then(({ posts, error }) => {
         if (error) throw new Error(error);
         const mapped = (posts || [])
-          .filter((p: any) => (p.caption || p.body || "").trim()) // скрываем посты без текста
+          .filter((p: any) => (p.caption || p.body || "").trim())
           .map((p: any) => {
             try { return postToMaterial(p); } catch { return null; }
           }).filter(Boolean) as Material[];
@@ -263,27 +294,30 @@ export default function Home() {
         setPostsLoaded(true);
       })
       .catch((e) => { setFetchError(String(e)); setPostsLoaded(true); });
+  }, []);
 
-    if (uid) {
-      Promise.all([
-        fetch("/api/sprint").then(r => r.json()),
-        fetch(`/api/checkins?userId=${uid}`).then(r => r.json()),
-        fetch(`/api/progress?userId=${uid}`).then(r => r.json()),
-      ]).then(([sprintRes, checkinRes, progressRes]) => {
-        setActiveSprint(sprintRes.sprint ?? null);
-        setSprintLoaded(true);
-        setTodayCheckin(checkinRes.checkin ?? null);
-        setCheckinStreak(checkinRes.streak ?? 0);
-        if (checkinRes.checkin) setCheckinDone(true);
-        if (progressRes.completedIds) setCompletedIds(new Set(progressRes.completedIds));
-        setProgressData(progressRes);
-        setProgressLoaded(true);
-      }).catch(() => { setSprintLoaded(true); setProgressLoaded(true); });
-    } else {
+  // Загружаем спринт/прогресс после того как userId стал известен
+  useEffect(() => {
+    if (!userId) {
       setSprintLoaded(true);
       setProgressLoaded(true);
+      return;
     }
-  }, []);
+    Promise.all([
+      fetch("/api/sprint").then(r => r.json()),
+      fetch(`/api/checkins?userId=${userId}`).then(r => r.json()),
+      fetch(`/api/progress?userId=${userId}`).then(r => r.json()),
+    ]).then(([sprintRes, checkinRes, progressRes]) => {
+      setActiveSprint(sprintRes.sprint ?? null);
+      setSprintLoaded(true);
+      setTodayCheckin(checkinRes.checkin ?? null);
+      setCheckinStreak(checkinRes.streak ?? 0);
+      if (checkinRes.checkin) setCheckinDone(true);
+      if (progressRes.completedIds) setCompletedIds(new Set(progressRes.completedIds));
+      setProgressData(progressRes);
+      setProgressLoaded(true);
+    }).catch(() => { setSprintLoaded(true); setProgressLoaded(true); });
+  }, [userId]);
 
   const materials = realPosts;
 
