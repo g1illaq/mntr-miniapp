@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
 
-const OWNER_ID = 172575833;
+const OWNER_ID = 7276417797;
 
 const HASHTAGS = [
   "финансы", "саморазвитие", "softskills", "hardskills",

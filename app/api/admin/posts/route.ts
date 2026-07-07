@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getServiceClient } from "@/lib/supabase";
 
-const OWNER_ID = 172575833;
+const OWNER_ID = 7276417797;
 
 export async function POST(req: NextRequest) {
   const { userId, title, body, hashtags, photoUrl } = await req.json();

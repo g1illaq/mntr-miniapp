@@ -13,7 +13,7 @@ import { ArticleDrawer } from "@/components/ArticleDrawer";
 type Tab = "home" | "materials" | "checkin" | "progress";
 interface FilterState { hashtags: Hashtag[]; sort: "new" | "old"; showSaved: boolean; }
 
-const OWNER_ID = 172575833;
+const OWNER_ID = 7276417797;
 
 function getSprintDay(startDate: string): number {
   const start = new Date(startDate);
