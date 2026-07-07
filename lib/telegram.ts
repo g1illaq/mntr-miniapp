@@ -24,7 +24,8 @@ export function verifyTelegramWebAppData(initData: string): Record<string, strin
 
 export async function checkChannelMembership(userId: number): Promise<boolean> {
   const BOT_TOKEN = process.env.BOT_TOKEN!;
-  const CHANNEL_ID = process.env.CHANNEL_ID!;
+  // Приватный канал — только числовой ID работает с Bot API
+  const CHANNEL_ID = "-1003555330551";
 
   const res = await fetch(
     `https://api.telegram.org/bot${BOT_TOKEN}/getChatMember?chat_id=${CHANNEL_ID}&user_id=${userId}`
