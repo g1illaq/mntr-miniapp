@@ -75,6 +75,18 @@ export async function POST(req: NextRequest) {
     if (!msg) return NextResponse.json({ ok: true });
 
     // ── Личное сообщение боту: перешли пост канала → бот сохраняет с фото ──
+    if (msg.chat?.type === "private" && msg.from?.id !== OWNER_ID) {
+      // Дебаг: сообщаем реальный ID отправителя
+      await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: msg.from?.id,
+          text: `Ваш Telegram ID: ${msg.from?.id}. Напишите его разработчику.`,
+        }),
+      });
+      return NextResponse.json({ ok: true });
+    }
     if (msg.chat?.type === "private" && msg.from?.id === OWNER_ID) {
       const text = msg.text || msg.caption || "";
       if (!text.trim()) return NextResponse.json({ ok: true });
