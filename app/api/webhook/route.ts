@@ -74,6 +74,66 @@ export async function POST(req: NextRequest) {
     const msg = body.message;
     if (!msg) return NextResponse.json({ ok: true });
 
+    // ── /start и /help — приветствие для новых участников ────────────────
+    if (msg.chat?.type === "private") {
+      const cmd = (msg.text || "").trim().split(" ")[0].toLowerCase();
+
+      if (cmd === "/start") {
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: msg.chat.id,
+            parse_mode: "HTML",
+            text: `Привет, ${msg.from?.first_name || "друг"} 👋\n\nЭто бот <b>MNTR Community</b> — пространства для системного личного и профессионального развития.\n\n<b>MNTR</b> — это четыре направления развития:\n\n🧠 <b>M · Mind</b> — как ты думаешь, учишься и принимаешь решения\n🧭 <b>N · Navigation</b> — твои ценности, ориентиры и направление движения\n⚡ <b>T · Thrive</b> — энергия, восстановление и устойчивое состояние\n🎯 <b>R · Realization</b> — проекты, действия и реальные результаты\n\nКаждый месяц — одна тема, одна практика, одно движение вперёд.\n\n👇 Чтобы попасть в комьюнити:`,
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: "📲 Открыть мини-приложение", web_app: { url: "https://mntr-miniapp.vercel.app" } }],
+                [{ text: "📢 Канал MNTR Community", url: "https://t.me/mntrcomm" }],
+              ],
+            },
+          }),
+        });
+        return NextResponse.json({ ok: true });
+      }
+
+      if (cmd === "/help") {
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: msg.chat.id,
+            parse_mode: "HTML",
+            text: `<b>Что умеет этот бот:</b>\n\n/start — узнать о MNTR Community\n/about — подробнее о четырёх направлениях\n\nЧерез мини-приложение ты можешь:\n• Читать материалы по направлениям M/N/T/R\n• Отмечать чек-ин каждый день\n• Следить за своим прогрессом\n• Участвовать в спринтах`,
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: "📲 Открыть MNTR", web_app: { url: "https://mntr-miniapp.vercel.app" } }],
+              ],
+            },
+          }),
+        });
+        return NextResponse.json({ ok: true });
+      }
+
+      if (cmd === "/about") {
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: msg.chat.id,
+            parse_mode: "HTML",
+            text: `<b>О MNTR Community</b>\n\nMNTR — это не просто канал с контентом. Это среда, где участник движется по понятному маршруту:\n\n1️⃣ <b>Тема месяца</b> — один фокус на 30 дней\n2️⃣ <b>Материалы</b> — подборка по теме из четырёх направлений\n3️⃣ <b>Практика / спринт</b> — конкретное действие\n4️⃣ <b>Обсуждение</b> — разбор с сообществом\n5️⃣ <b>Личное движение</b> — трекинг и чек-ины\n\nНе просто знания — а система, которая помогает их применять.`,
+            reply_markup: {
+              inline_keyboard: [
+                [{ text: "📲 Открыть мини-приложение", web_app: { url: "https://mntr-miniapp.vercel.app" } }],
+              ],
+            },
+          }),
+        });
+        return NextResponse.json({ ok: true });
+      }
+    }
+
     // ── Личное сообщение боту: перешли пост канала → бот сохраняет с фото ──
     if (msg.chat?.type === "private" && msg.from?.id === OWNER_ID) {
       const text = msg.text || msg.caption || "";
