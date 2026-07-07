@@ -149,6 +149,7 @@ export default function Home() {
     start_date: new Date().toISOString().split("T")[0], end_date: "",
   });
   const [adminSubmitting, setAdminSubmitting] = useState(false);
+  const [adminDeleting, setAdminDeleting] = useState(false);
 
   const toggleSave = (id: string) => {
     setSavedIds(prev => {
@@ -202,6 +203,21 @@ export default function Home() {
       }
     } catch {}
     setCheckinSubmitting(false);
+  };
+
+  const deleteSprint = async () => {
+    if (!userId) return;
+    setAdminDeleting(true);
+    try {
+      await fetch("/api/sprint", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+      setActiveSprint(null);
+      setAdminOpen(false);
+    } catch {}
+    setAdminDeleting(false);
   };
 
   const submitSprint = async () => {
@@ -885,23 +901,34 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="px-5 py-4 flex gap-3 shrink-0" style={{ borderTop: "1px solid var(--mc-ink-border)" }}>
-              <button onClick={() => setAdminOpen(false)}
-                className="flex-1 py-3 rounded-xl text-sm font-semibold"
-                style={{ backgroundColor: "var(--mc-ink-3)", color: "var(--mc-text-muted)", border: "1px solid var(--mc-ink-border)" }}>
-                Отмена
-              </button>
-              <button
-                disabled={adminSubmitting || !adminForm.title || !adminForm.start_date || !adminForm.end_date}
-                onClick={submitSprint}
-                className="flex-1 py-3 rounded-xl text-sm font-semibold"
-                style={{
-                  background: "linear-gradient(90deg, var(--mc-primary-dark), var(--mc-primary))",
-                  color: "#fff",
-                  opacity: adminForm.title && adminForm.start_date && adminForm.end_date ? 1 : 0.4,
-                }}>
-                {adminSubmitting ? "Создаём..." : "Создать"}
-              </button>
+            <div className="px-5 py-4 space-y-2 shrink-0" style={{ borderTop: "1px solid var(--mc-ink-border)" }}>
+              <div className="flex gap-3">
+                <button onClick={() => setAdminOpen(false)}
+                  className="flex-1 py-3 rounded-xl text-sm font-semibold"
+                  style={{ backgroundColor: "var(--mc-ink-3)", color: "var(--mc-text-muted)", border: "1px solid var(--mc-ink-border)" }}>
+                  Отмена
+                </button>
+                <button
+                  disabled={adminSubmitting || !adminForm.title || !adminForm.start_date || !adminForm.end_date}
+                  onClick={submitSprint}
+                  className="flex-1 py-3 rounded-xl text-sm font-semibold"
+                  style={{
+                    background: "linear-gradient(90deg, var(--mc-primary-dark), var(--mc-primary))",
+                    color: "#fff",
+                    opacity: adminForm.title && adminForm.start_date && adminForm.end_date ? 1 : 0.4,
+                  }}>
+                  {adminSubmitting ? "Создаём..." : "Создать"}
+                </button>
+              </div>
+              {activeSprint && (
+                <button
+                  disabled={adminDeleting}
+                  onClick={deleteSprint}
+                  className="w-full py-2.5 rounded-xl text-sm font-semibold"
+                  style={{ backgroundColor: "rgba(239,68,68,0.1)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.25)" }}>
+                  {adminDeleting ? "Удаляем..." : "Удалить текущий спринт"}
+                </button>
+              )}
             </div>
           </div>
         </div>

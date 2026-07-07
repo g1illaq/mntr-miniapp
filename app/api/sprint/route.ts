@@ -19,6 +19,16 @@ export async function GET() {
   return NextResponse.json({ sprint: data ?? null });
 }
 
+export async function DELETE(req: Request) {
+  const body = await req.json();
+  if (Number(body.userId) !== OWNER_ID) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
+  const db = getServiceClient();
+  await db.from("sprints").update({ is_active: false }).eq("is_active", true);
+  return NextResponse.json({ ok: true });
+}
+
 export async function POST(req: Request) {
   const body = await req.json();
   if (Number(body.userId) !== OWNER_ID) {
