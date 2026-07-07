@@ -800,15 +800,35 @@ export default function Home() {
       <nav className="fixed bottom-0 left-0 right-0 flex items-center justify-around px-2 z-10"
         style={{ backgroundColor: "var(--mc-ink-2)", borderTop: "1px solid var(--mc-ink-border)", paddingTop: "10px", paddingBottom: "calc(10px + env(safe-area-inset-bottom))" }}>
         {([
-          { key: "home" as Tab,      icon: "⌂",  label: "Главная"   },
-          { key: "materials" as Tab, icon: "📚", label: "Материалы" },
-          { key: "checkin" as Tab,   icon: "✅", label: "Чек-ин"    },
-          { key: "progress" as Tab,  icon: "📊", label: "Прогресс"  },
+          { key: "home" as Tab, label: "Главная", icon: (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+              <path d="M9 21V12h6v9"/>
+            </svg>
+          )},
+          { key: "materials" as Tab, label: "Материалы", icon: (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+          )},
+          { key: "checkin" as Tab, label: "Чек-ин", icon: (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <path d="M16 2v4M8 2v4M3 10h18"/>
+              <path d="M8 14l2.5 2.5L16 11"/>
+            </svg>
+          )},
+          { key: "progress" as Tab, label: "Прогресс", icon: (
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 20V10M12 20V4M6 20v-6"/>
+            </svg>
+          )},
         ]).map(({ key, icon, label }) => (
-          <button key={key} onClick={() => setTab(key)} className="flex flex-col items-center gap-0.5 px-4">
-            <span className="text-xl" style={{ opacity: tab === key ? 1 : 0.35 }}>{icon}</span>
-            <span className="text-[10px] font-medium"
-              style={{ color: tab === key ? "var(--mc-primary-bright)" : "var(--mc-text-faint)", fontFamily: "var(--mc-font-mono)" }}>
+          <button key={key} onClick={() => setTab(key)} className="flex flex-col items-center gap-1 px-4"
+            style={{ color: tab === key ? "var(--mc-primary-bright)" : "var(--mc-text-faint)", opacity: tab === key ? 1 : 0.45 }}>
+            {icon}
+            <span className="text-[10px] font-medium" style={{ fontFamily: "var(--mc-font-mono)" }}>
               {label.toUpperCase()}
             </span>
           </button>
