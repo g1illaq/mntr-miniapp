@@ -78,6 +78,18 @@ export async function POST(req: NextRequest) {
     if (msg.chat?.type === "private") {
       const cmd = (msg.text || "").trim().split(" ")[0].toLowerCase();
 
+      if (cmd === "/id") {
+        await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: msg.chat.id,
+            text: `Твой Telegram ID: ${msg.from?.id}`,
+          }),
+        });
+        return NextResponse.json({ ok: true });
+      }
+
       if (cmd === "/start") {
         await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
           method: "POST",
